@@ -41,6 +41,7 @@ export const ScenarioResult = () => {
 
   const situationRef = useRef<HTMLDivElement>(null);
   const hasAutoNavigated = useRef(false);
+  const finalTurnTargetRef = useRef<number | null>(null);
 
   const getStreamHandler = (pageIndex: number) => (chunk: ScenarioStreamChunk) => {
     if (chunk.type === 'situation' && chunk.content) {
@@ -104,6 +105,7 @@ export const ScenarioResult = () => {
       setCurrentPageIndex(0);
       setSurvivalRate(null);
       hasAutoNavigated.current = false;
+      finalTurnTargetRef.current = null;
       await createScenarioWithStreaming(
         state.selectedReport,
         state.scenarioTitle,
@@ -135,6 +137,7 @@ export const ScenarioResult = () => {
     setShowFog(false);
     setSurvivalRate(null);
     hasAutoNavigated.current = false;
+    finalTurnTargetRef.current = null;
 
     createScenarioWithStreaming(
       state.selectedReport,
@@ -211,7 +214,8 @@ export const ScenarioResult = () => {
 
   useEffect(() => {
     const feedbackCount = pages.filter((page) => page.feedback).length;
-    if (feedbackCount >= 10 && !hasAutoNavigated.current) {
+    const target = finalTurnTargetRef.current;
+    if (target && feedbackCount >= target && !hasAutoNavigated.current) {
       hasAutoNavigated.current = true;
       navigate('/scenario/feedback', {
         state: {
@@ -229,6 +233,9 @@ export const ScenarioResult = () => {
     }
     console.log('Selected choice:', choice);
     const history = buildHistory(pages, currentPageIndex, choice);
+    if (history.length >= 10) {
+      finalTurnTargetRef.current = 10;
+    }
 
     const nextIndex = pages.length;
     setPages((prev) => {
