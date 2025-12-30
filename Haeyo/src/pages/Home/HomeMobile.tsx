@@ -8,6 +8,7 @@ export const HomeMobile = () => {
   const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
 
   useEffect(() => {
     const loadReports = async () => {
@@ -184,7 +185,7 @@ export const HomeMobile = () => {
           </svg>
           <span>학습</span>
         </button>
-        <button className={styles.navBtn}>
+        <button className={styles.navBtn} onClick={() => navigate('/profile')}>
           <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
             <path d="M8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0ZM8 10C5.33 10 0 11.34 0 14V16C0 17.1 0.9 18 2 18H14C15.1 18 16 17.1 16 16V14C16 11.34 10.67 10 8 10Z" fill="#737373"/>
           </svg>
@@ -192,9 +193,45 @@ export const HomeMobile = () => {
         </button>
       </nav>
 
+      {/* Floating Action Menu */}
+      {isFabMenuOpen && (
+        <div className={styles.fabMenuContainer}>
+          <div className={styles.fabMenuBackground}>
+            <button 
+              className={styles.fabMenuItem}
+              onClick={() => navigate('/scenario/create')}
+              title="시나리오"
+            >
+              <svg width="15" height="20" viewBox="0 0 15 20" fill="none">
+                <path d="M12 0H3C1.9 0 1 0.9 1 2V18C1 19.1 1.9 20 3 20H12C13.1 20 14 19.1 14 18V2C14 0.9 13.1 0 12 0ZM7.5 1.5C8.05 1.5 8.5 1.95 8.5 2.5C8.5 3.05 8.05 3.5 7.5 3.5C6.95 3.5 6.5 3.05 6.5 2.5C6.5 1.95 6.95 1.5 7.5 1.5ZM7.5 18.5C6.67 18.5 6 17.83 6 17C6 16.17 6.67 15.5 7.5 15.5C8.33 15.5 9 16.17 9 17C9 17.83 8.33 18.5 7.5 18.5Z" fill="#171717"/>
+              </svg>
+              <span className={styles.fabMenuLabel}>시나리오</span>
+            </button>
+            <button 
+              className={styles.fabMenuItem}
+              title="제보하기"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 0L12.5 7.5H20L14 12L16.5 19.5L10 15L3.5 19.5L6 12L0 7.5H7.5L10 0Z" fill="#171717"/>
+              </svg>
+              <span className={styles.fabMenuLabel}>제보하기</span>
+            </button>
+          </div>
+        </div>
+      )}
+      
       {/* Floating Action Button */}
-      <button className={styles.fab}>
-        <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
+      <button 
+        className={`${styles.fab} ${isFabMenuOpen ? styles.fabOpen : ''}`}
+        onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
+      >
+        <svg 
+          width="18" 
+          height="20" 
+          viewBox="0 0 18 20" 
+          fill="none"
+          className={styles.fabIcon}
+        >
           <path d="M10 0H8V8H0V10H8V20H10V10H18V8H10V0Z" fill="white"/>
         </svg>
       </button>

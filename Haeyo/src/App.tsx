@@ -6,6 +6,7 @@ import { TrainingMobile } from './pages/Training'
 import { ScenarioCreate } from './pages/ScenarioCreate'
 import { ScenarioResult } from './pages/ScenarioResult'
 import { ScenarioFeedback } from './pages/ScenarioFeedback'
+import { ProfileMobile } from './pages/Profile/ProfileMobile'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
 import './App.css'
@@ -73,6 +74,14 @@ function App() {
           element={
             <PrivateRoute>
               <TrainingMobile />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <PrivateRoute>
+              <ProfileMobile />
             </PrivateRoute>
           } 
         />

@@ -346,11 +346,64 @@
   fill: #171717;
 }
 
+/* Floating Action Menu */
+.fabMenuContainer {
+  position: fixed;
+  bottom: 160px;
+  right: 0px;
+  z-index: 98;
+}
+
+.fabMenuBackground {
+  background: #fafafa;
+  border: 1px solid black;
+  border-radius: 80px;
+  box-shadow: 0px 2px 2px 0px black;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  width: 70px;
+}
+
+.fabMenuItem {
+  width: 56px;
+  height: 56px;
+  background: #fafafa;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.fabMenuItem:hover {
+  transform: scale(1.05);
+}
+
+.fabMenuLabel {
+  position: absolute;
+  bottom: -20px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #525252;
+  letter-spacing: -0.5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* Floating Action Button */
 .fab {
   position: fixed;
   bottom: 90px;
-  right: 16px;
+  right: 0px;
   width: 56px;
   height: 56px;
   background: #171717;
@@ -362,8 +415,25 @@
   justify-content: center;
   cursor: pointer;
   z-index: 99;
+  transition: transform 0.3s, background 0.2s;
 }
 
 .fab:hover {
   background: #262626;
+}
+
+.fab.fabOpen {
+  background: #00abfa;
+}
+
+.fab.fabOpen:hover {
+  background: #0099e0;
+}
+
+.fabIcon {
+  transition: transform 0.3s;
+}
+
+.fab.fabOpen .fabIcon {
+  transform: rotate(45deg);
 }
