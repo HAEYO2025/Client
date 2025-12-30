@@ -1,34 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { SignUpMobile, SignUpWeb } from './pages/SignUp'
+import { LoginMobile, LoginWeb } from './pages/Login'
+import { HomeMobile, HomeWeb } from './pages/Home'
+import { ScenarioCreate } from './pages/ScenarioCreate'
+import { useMediaQuery } from './hooks/useMediaQuery'
+import { isAuthenticated } from './api/auth'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+function LoginPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <LoginMobile /> : <LoginWeb />
+}
 
+function SignUpPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <SignUpMobile /> : <SignUpWeb />
+}
+
+function HomePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <HomeMobile /> : <HomeWeb />
+}
+
+// Protected route component
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />
+}
+
+function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route 
+          path="/home" 
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/scenario/create" 
+          element={
+            <PrivateRoute>
+              <ScenarioCreate />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/" 
+          element={
+            isAuthenticated() ? 
+              <Navigate to="/home" replace /> : 
+              <Navigate to="/login" replace />
+          } 
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -1,0 +1,148 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  width: 100%;
+  height: 118px;
+  background: #fff5f5;
+  border-bottom: 1px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 75px 0 75px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 30px;
+}
+
+.text {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 30px;
+  color: #101010;
+}
+
+.nav {
+  display: flex;
+  gap: 33px;
+  align-items: center;
+}
+
+.navItem {
+  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+  font-size: 18px;
+  color: #5d5a88;
+  cursor: pointer;
+  transition: font-weight 0.2s;
+}
+
+.navItem:hover {
+  font-weight: 700;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.username {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: #5d5a88;
+  font-weight: 600;
+}
+
+.logoutBtn {
+  padding: 18px 24px;
+  border: 1px solid #d4d2e3;
+  border-radius: 30px;
+  background: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  color: #5d5a88;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.logoutBtn:hover {
+  background: #f5f5f5;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.content {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 48px;
+  color: #171717;
+  margin: 0;
+  text-align: center;
+}
+
+.userInfo {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  color: #404040;
+  text-align: center;
+  margin: 0;
+}
+
+.userInfo strong {
+  color: #0062ff;
+  font-weight: 700;
+}
+
+.time {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #737373;
+  text-align: center;
+  margin: 0;
+}
+
+.placeholder {
+  margin: 80px 0;
+  padding: 120px 40px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.placeholder p:first-child {
+  font-size: 72px;
+  margin: 0 0 24px;
+}
+
+.comingSoon {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  color: #737373;
+  margin: 0;
+}
