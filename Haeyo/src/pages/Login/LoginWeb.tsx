@@ -24,8 +24,7 @@ export const LoginWeb = () => {
     try {
       const response = await login(formData);
       console.log('Login success:', response);
-      alert(`로그인 성공!\n사용자: ${response.userId}`);
-      // TODO: Navigate to home or dashboard
+      navigate('/home');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '로그인에 실패했습니다.';
       setError(errorMessage);
