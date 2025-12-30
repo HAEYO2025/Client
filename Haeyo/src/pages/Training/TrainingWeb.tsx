@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logout, getCurrentUser } from '../../api/auth';
+import { fetchSafetyGuide } from '../../api/safetyGuide';
+import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import aiFilesIcon from '../../assets/ai-files.png';
 import secureShieldIcon from '../../assets/secure-shield.png';
 import styles from './TrainingWeb.module.css';
@@ -7,10 +10,49 @@ import styles from './TrainingWeb.module.css';
 export const TrainingWeb = () => {
   const navigate = useNavigate();
   const user = getCurrentUser();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleSafetyGuideClick = async () => {
+    if (isLoading) {
+      return;
+    }
+    if (!navigator.geolocation) {
+      alert('위치 정보를 사용할 수 없습니다.');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const request: SafetyGuideRequest = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        date: new Date().toISOString().slice(0, 10).replace(/-/g, ''),
+        data_type: 'tideObs',
+        station_data_type: 'ObsServiceObj',
+      };
+
+      const response = await fetchSafetyGuide(request);
+      if (response.success) {
+        navigate('/safety-guide', { state: response.data });
+      } else {
+        console.error('Failed to fetch safety guide:', response.error);
+        alert('안전 가이드 정보를 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to get current position:', error);
+      alert('현재 위치를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,7 +88,7 @@ export const TrainingWeb = () => {
         </div>
 
         {/* Safety Guide Card */}
-        <div className={styles.card}>
+        <div className={styles.card} onClick={handleSafetyGuideClick}>
           <div className={styles.cardIcon}>
             <img src={secureShieldIcon} alt="Secure Shield" className={styles.iconImage} />
           </div>
@@ -60,6 +102,15 @@ export const TrainingWeb = () => {
           <path d="M10 0H8V8H0V10H8V20H10V10H18V8H10V0Z" fill="white"/>
         </svg>
       </button>
+
+      {isLoading && (
+        <div className={styles.loadingOverlay} role="status" aria-live="polite">
+          <div className={styles.loadingCard}>
+            <span className={styles.loadingSpinner} aria-hidden="true" />
+            <p className={styles.loadingText}>맞춤형 안전 가이드 생성 중...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
