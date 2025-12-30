@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Report } from '../../types/report';
 import { fetchRecentReports } from '../../api/reports';
+import { fetchSafetyGuide } from '../../api/safetyGuide';
+import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { FloatingActionButton } from '../../components/FloatingActionButton';
 import { Header } from '../../components/Header';
@@ -11,6 +13,7 @@ export const HomeMobile = () => {
   const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGuideLoading, setIsGuideLoading] = useState(false);
 
   useEffect(() => {
     const loadReports = async () => {
@@ -29,6 +32,44 @@ export const HomeMobile = () => {
 
     loadReports();
   }, []);
+
+  const handleSafetyGuideClick = async () => {
+    if (isGuideLoading) {
+      return;
+    }
+    if (!navigator.geolocation) {
+      alert('위치 정보를 사용할 수 없습니다.');
+      return;
+    }
+
+    try {
+      setIsGuideLoading(true);
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const request: SafetyGuideRequest = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        date: new Date().toISOString().slice(0, 10).replace(/-/g, ''),
+        data_type: 'tideObs',
+        station_data_type: 'ObsServiceObj',
+      };
+
+      const response = await fetchSafetyGuide(request);
+      if (response.success) {
+        navigate('/safety-guide', { state: response.data });
+      } else {
+        console.error('Failed to fetch safety guide:', response.error);
+        alert('안전 가이드 정보를 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to get current position:', error);
+      alert('현재 위치를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+    } finally {
+      setIsGuideLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -91,7 +132,7 @@ export const HomeMobile = () => {
               </svg>
               <span>시나리오 생성</span>
             </button>
-            <button className={styles.actionBtn}>
+            <button className={styles.actionBtn} onClick={handleSafetyGuideClick}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M9 5H11V11H9V5ZM10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18ZM9 13H11V15H9V13Z" fill="#525252"/>
               </svg>
@@ -155,6 +196,15 @@ export const HomeMobile = () => {
 
       {/* Floating Action Button */}
       <FloatingActionButton />
+
+      {isGuideLoading && (
+        <div className={styles.loadingOverlay} role="status" aria-live="polite">
+          <div className={styles.loadingCard}>
+            <span className={styles.loadingSpinner} aria-hidden="true" />
+            <p className={styles.loadingText}>맞춤형 안전 가이드 생성 중...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
