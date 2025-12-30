@@ -21,6 +21,13 @@ export const ReportSelectModal = ({
     onClose();
   };
 
+  const getReportTitle = (report: Report) => {
+    if (!report.content) {
+      return '제목 없음';
+    }
+    return report.content.length > 50 ? `${report.content.slice(0, 50)}...` : report.content;
+  };
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -59,10 +66,9 @@ export const ReportSelectModal = ({
                     </svg>
                   </div>
                   <div className={styles.reportInfo}>
-                    <p className={styles.reportContent}>{report.content}</p>
+                    <p className={styles.reportContent}>{getReportTitle(report)}</p>
                     <div className={styles.reportMeta}>
                       <span className={styles.reportAuthor}>{report.author.name}</span>
-                      <span className={styles.reportTime}>{report.timeAgo}</span>
                     </div>
                   </div>
                   {selectedReportId === report.id && (

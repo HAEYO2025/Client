@@ -8,7 +8,7 @@ export interface Report {
   timeAgo: string;
   stats: {
     likes: number;
-    comments: number;
+    dislikes: number;
   };
   location: {
     latitude: number;

@@ -379,6 +379,15 @@ export const ScenarioResult = () => {
 
   return (
     <div className={styles.container}>
+      {/* Wave Animation */}
+      {isStreaming && (
+        <div className={styles.waveContainer}>
+          <div className={`${styles.wave} ${styles.waveOne}`}></div>
+          <div className={`${styles.wave} ${styles.waveTwo}`}></div>
+          <div className={`${styles.wave} ${styles.waveThree}`}></div>
+        </div>
+      )}
+      
       {/* Header */}
       <header className={styles.header}>
         <button className={styles.backBtn} onClick={handleCancel}>

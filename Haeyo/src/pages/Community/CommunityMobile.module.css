@@ -1,0 +1,422 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+.header {
+  height: 61px;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logoIcon {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logoText {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #171717;
+  letter-spacing: -0.5px;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  padding: 4px;
+  color: #333;
+}
+
+.main {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  padding-bottom: 100px; /* Added more space for FAB/Bottom nav */
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.moreBtn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #666;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.postCard {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s;
+}
+
+.postCard:active {
+  transform: scale(0.98);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.postAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+}
+
+.postName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.postTime {
+  font-size: 12px;
+  color: #888;
+}
+
+.statusBadge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.statusBadge.resolved {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.statusBadge.unresolved {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.cardBody {
+  display: flex;
+  gap: 12px;
+}
+
+.textContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.postText {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.categoryBadge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+  background-color: #8c8c8c;
+}
+
+.categoryBadge.DAMAGE { background-color: #ff4d4f; }
+.categoryBadge.ANIMAL { background-color: #faad14; }
+.categoryBadge.TRASH { background-color: #52c41a; }
+.categoryBadge.OTHER { background-color: #8c8c8c; }
+
+.addressText {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.thumbnailContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #f0f0f0;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postCard {
+  transition: background-color 0.2s;
+}
+
+.postCard:active {
+  background-color: #f5f5f5;
+}
+
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 71px;
+  background: white;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  padding: 8px 16px;
+  justify-content: space-around;
+  z-index: 100;
+}
+
+.navBtn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 12px;
+  flex: 1;
+  max-width: 85px;
+}
+
+.navBtn span {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #737373;
+  letter-spacing: -0.5px;
+}
+
+.navBtn.active span {
+  color: #171717;
+  font-weight: 600;
+}
+
+.navIcon img {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.navBtn.active .navIcon img {
+  filter: none;
+  opacity: 1;
+}
+
+.navBtn.active svg path {
+  fill: #171717;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+}
+
+.modalTitle {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.modalTextarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.modalActions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.modalCancelBtn {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+}
+
+.modalSubmitBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #171717;
+  color: white;
+}
+
+.modalSubmitBtn:disabled {
+  background: #ccc;
+}
+
+/* Community Specific Styles */
+.communityPostCard {
+  display: flex;
+  gap: 12px;
+  background: white;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.communityPostCard:last-child {
+  border-bottom: none;
+}
+
+.postContentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.communityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.timeAgo {
+  font-size: 12px;
+  color: #999;
+}
+
+.communityBody {
+  margin-bottom: 8px;
+}
+
+.communityActions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #8C8C8C;
+}
+
+.actionItem svg {
+  width: 14px;
+  height: 14px;
+  fill: #8C8C8C;
+}
+
+/* Override avatar for this view if needed */
+.communityPostCard .postAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eee;
+  flex-shrink: 0;
+  overflow: hidden;
+}

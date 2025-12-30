@@ -1,280 +1,573 @@
+/* Global reset for this component's scope if needed, though usually global.css handles it */
+/* .main-page equivalent */
 .container {
-  width: 100%;
-  min-height: 100vh;
-  background: #ffffff;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden; /* Ensure no window scroll */
 }
 
 /* Header */
+/* Header */
 .header {
-  width: 100%;
-  height: 56px;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 40px;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.logoIcon {
-  font-size: 24px;
+.anchorIcon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .logoText {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #000000;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
 }
 
-.nav {
+.navMenu {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 30px;
 }
 
 .navItem {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #6b7280;
   background: none;
   border: none;
+  font-size: 16px;
+  color: #666;
   cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
+  padding: 8px 12px;
+  transition: color 0.3s;
 }
 
 .navItem:hover {
-  color: #000000;
+  color: #333;
 }
 
-.navItem.active {
-  color: #000000;
-  font-weight: 600;
+.navBtn {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-/* Main Layout */
-.mainLayout {
+.navBtn:hover {
+  background-color: #f5f5f5;
+}
+
+.userName {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .userName {
+    display: none !important;
+  }
+  .navItem {
+    display: none;
+  }
+  .header {
+    padding: 10px 16px;
+  }
+  .navMenu {
+    gap: 10px;
+  }
+}
+
+.logoutBtn {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #666;
+}
+
+.logoutBtn:hover {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Content Area */
+.content {
   display: flex;
   flex: 1;
-  height: calc(100vh - 56px);
+  overflow: hidden;
 }
 
-/* Left Sidebar */
+/* Sidebar */
 .sidebar {
-  width: 280px;
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
+  width: 380px;
+  background-color: #f9f9f9;
+  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
 }
 
 .sidebarHeader {
-  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 20px;
+  background-color: white;
 }
 
-.sidebarTitle {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  color: #000000;
+.sidebarHeader h2 {
+  font-size: 18px;
+  font-weight: bold;
   margin: 0;
 }
 
+.sidebarTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.reportBtn {
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reportBtn:hover {
+  background-color: #333;
+}
+
 .moreBtn {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 12px;
-  color: #6b7280;
   background: none;
   border: none;
+  color: #666;
+  font-size: 14px;
   cursor: pointer;
-  padding: 0;
 }
 
-.moreBtn:hover {
-  color: #000000;
+/* Filter Button in Sidebar - To be removed or hidden if necessary, 
+   but for now I'll just keep the base button style for reuse */
+.filterBtn {
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.reportsList {
+.filterBtn:hover {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.filterBtn.active {
+  background-color: #2c2c2c;
+  color: white;
+  border-color: #2c2c2c;
+}
+
+.filterBtn.active svg path {
+  fill: white;
+}
+
+/* Comments List */
+.commentsList {
   flex: 1;
   overflow-y: auto;
 }
 
-/* Report Card */
-.reportCard {
-  padding: 16px 20px;
-  border-bottom: 1px solid #f3f4f6;
-  cursor: pointer;
-  transition: background 0.2s;
+.commentItem {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s;
+  margin-bottom: 12px;
 }
 
-.reportCard:hover {
-  background: #f9fafb;
+.commentItem:active {
+  transform: scale(0.98);
 }
 
-.reportHeader {
+.commentItem:hover {
+  background-color: white; /* Override hover default */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.cardHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
 }
 
-.reportAuthor {
+.userInfo {
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 8px;
 }
 
-.avatar {
-  width: 32px;
-  height: 32px;
+.commentAvatar {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
-.authorInfo {
+.headerText {
   display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
-.authorName {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+.commentName {
+  font-size: 14px;
   font-weight: 600;
-  font-size: 13px;
-  color: #000000;
+  color: #1a1a1a;
 }
 
-.reportTime {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+.commentTime {
+  font-size: 12px;
+  color: #888;
+}
+
+.statusBadge {
   font-size: 11px;
-  color: #9ca3af;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 500;
 }
 
-.reportContent {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #374151;
-  margin: 0 0 8px 0;
+.statusBadge.resolved {
+  background-color: #e6f7ff;
+  color: #1890ff;
 }
 
-.reportStats {
+.statusBadge.unresolved {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.cardBody {
   display: flex;
   gap: 12px;
 }
 
-.stat {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 11px;
-  color: #6b7280;
-}
-
-/* Notice Card */
-.noticeCard {
-  background: #000000;
-  color: #ffffff;
-  padding: 20px;
-  margin: 16px 20px;
-  border-radius: 8px;
-}
-
-.noticeTitle {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  margin: 0 0 12px 0;
-}
-
-.noticeText {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 12px;
-  line-height: 1.5;
-  margin: 0 0 16px 0;
-  opacity: 0.9;
-}
-
-.noticeBtn {
-  width: 100%;
-  padding: 10px;
-  background: #ffffff;
-  color: #000000;
-  border: none;
-  border-radius: 4px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.noticeBtn:hover {
-  opacity: 0.9;
-}
-
-/* Map Area */
-.mapArea {
+.textContent {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.commentText {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.categoryBadge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+  background-color: #8c8c8c;
+}
+
+.categoryBadge.DAMAGE { background-color: #ff4d4f; }
+.categoryBadge.ANIMAL { background-color: #faad14; }
+.categoryBadge.TRASH { background-color: #52c41a; }
+.categoryBadge.OTHER { background-color: #8c8c8c; }
+
+.addressText {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.thumbnailContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #f0f0f0;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Announcement Box */
+.announcementBox {
+  margin: 20px;
+  padding: 20px;
+  background-color: #2c2c2c;
+  color: white;
+  border-radius: 8px;
+  display: flex;
+  gap: 15px;
+}
+
+.announcementIcon {
+  font-size: 24px;
+}
+
+.announcementContent {
+  flex: 1;
+}
+
+.announcementContent strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.announcementContent p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  color: #ddd;
+}
+
+.detailBtn {
+  background: none;
+  border: none;
+  color: white;
+  text-decoration: underline;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Map Section */
+.mapSection {
+  flex: 1;
+  background-color: #e8e8e8;
   position: relative;
-  background: #f3f4f6;
   display: flex;
   flex-direction: column;
 }
 
-.filterBtn {
+.mapControls {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   z-index: 10;
-  padding: 8px 16px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 13px;
-  color: #374151;
+}
+
+.mapFilterContainer {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.filterDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  min-width: 140px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownItem {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.dropdownItem.selected {
+  background-color: #f0f7ff;
+  color: #007bff;
+  font-weight: 600;
+}
+
+.controlBtn {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 18px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  transition: background-color 0.2s;
 }
 
-.filterBtn:hover {
-  background: #f9fafb;
+.controlBtn:hover {
+  background-color: #f5f5f5;
 }
 
 .mapContainer {
   flex: 1;
-  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mapMarker {
+  width: 36px;
+  height: 36px;
+  background-color: #2c2c2c;
+  color: white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid white;
 }
 
-.mapPlaceholder {
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  color: #9ca3af;
-  margin: 0;
+.mapMarker:hover {
+  transform: scale(1.1);
+}
+
+/* Map Footer */
+.mapFooter {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footerBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.footerBtn:hover {
+  color: #333;
+}
+
+.footerBtn span:first-child {
+  font-size: 24px;
+}
+
+/* Scrollbar Styles */
+.sidebar::-webkit-scrollbar,
+.commentsList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.commentsList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.commentsList::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.commentsList::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
 /* Map Markers */
@@ -368,4 +661,65 @@
   font-size: 12px;
   font-weight: 500;
   color: #374151;
+}
+
+/* Loading Overlay */
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.loadingCard {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
 }

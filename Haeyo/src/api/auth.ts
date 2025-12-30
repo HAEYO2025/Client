@@ -1,4 +1,13 @@
-import type { LoginFormData, LoginResponse, SignUpFormData, SignUpResponse } from '../types/auth';
+import type { 
+  ApiResponse,
+  LoginFormData, 
+  LoginResponse, 
+  SignUpFormData, 
+  SignUpResponse,
+  LogoutResponse,
+  RefreshResponse,
+  UserProfile
+} from '../types/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 const SIGNUP_URL = `${API_BASE_URL}/api/auth/signup`;
@@ -48,7 +57,7 @@ export const login = async (data: LoginFormData): Promise<LoginResponse> => {
   }
 
   const token = extractToken(payload);
-  const userId = extractUserId(payload, data.email);
+  const userId = extractUserId(payload, data.username);
 
   if (token) {
     localStorage.setItem('authToken', token);
@@ -138,11 +147,46 @@ export const getAuthHeaders = (): Record<string, string> => {
   if (!token) {
     return {};
   }
-  return { Authorization: token };
+  const normalized = token.replace(/^Bearer\s+/i, '').trim();
+  return { Authorization: `Bearer ${normalized}` };
+};
+
+export const fetchWithAuth = async (
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> => {
+  const withAuth = {
+    ...init,
+    headers: {
+      ...(init.headers || {}),
+      ...getAuthHeaders(),
+    },
+    credentials: 'include' as RequestCredentials,
+  };
+
+  const response = await fetch(input, withAuth);
+  if (response.status !== 401) {
+    return response;
+  }
+
+  const refreshed = await refreshAccessToken();
+  if (!refreshed) {
+    return response;
+  }
+
+  const retry = {
+    ...withAuth,
+    headers: {
+      ...(init.headers || {}),
+      ...getAuthHeaders(),
+    },
+  };
+
+  return fetch(input, retry);
 };
 
 /**
- * Logout - clear localStorage
+ * Real logout API
  */
 export const logout = async (): Promise<void> => {
   try {
@@ -172,13 +216,37 @@ export const isAuthenticated = (): boolean => {
 /**
  * Get current user info from localStorage
  */
-export const getCurrentUser = (): { userId: string; loginTime: string } | null => {
+export const getCurrentUser = (): { userId: string; username: string; userEmail: string; loginTime: string } | null => {
   const userId = localStorage.getItem('userId');
+  const username = localStorage.getItem('username');
+  const userEmail = localStorage.getItem('userEmail');
   const loginTime = localStorage.getItem('loginTime');
+  const authToken = localStorage.getItem('authToken');
 
-  if (userId && loginTime) {
-    return { userId, loginTime };
+  // If token exists, we consider user logged in even if some profile fields are missing
+  if (authToken) {
+    return { 
+      userId: userId || '', 
+      username: username || userId || '사용자', 
+      userEmail: userEmail || '', 
+      loginTime: loginTime || '' 
+    };
   }
 
   return null;
+};
+/**
+ * Get current user profile from backend
+ */
+export const getUserProfile = async (): Promise<ApiResponse<UserProfile>> => {
+  const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+    method: 'GET',
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error('사용자 정보를 불러올 수 없습니다.');
+  }
+
+  return response.json();
 };

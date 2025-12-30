@@ -1,79 +1,36 @@
 import type { Report, ReportsResponse } from '../types/report';
+import type { Post } from '../types/post';
+import { getPosts } from './posts';
 
-// Mock delay to simulate network request
-const mockDelay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const toHoursAgo = (createdAt?: string): string => {
+  if (!createdAt) {
+    return '0시간 전';
+  }
+  const created = new Date(createdAt).getTime();
+  if (Number.isNaN(created)) {
+    return '0시간 전';
+  }
+  const diffMs = Date.now() - created;
+  const hours = Math.max(0, Math.floor(diffMs / 3600000));
+  return `${hours}시간 전`;
+};
 
-// Mock reports data
-const MOCK_REPORTS: Report[] = [
-  {
-    id: '1',
-    author: {
-      name: '박가은',
-      avatar: '👤',
-    },
-    content: '쓰레기 무단 투기하는 사람이 너무 많네요.',
-    timeAgo: '2시간 전',
-    stats: {
-      likes: 12,
-      comments: 12,
-    },
-    location: {
-      latitude: 37.5665,
-      longitude: 126.978,
-    },
+const toReport = (post: Post): Report => ({
+  id: String(post.id),
+  author: {
+    name: post.username,
   },
-  {
-    id: '2',
-    author: {
-      name: '김동욱',
-      avatar: '👤',
-    },
-    content: '해파리 발견했습니다.',
-    timeAgo: '4시간 전',
-    stats: {
-      likes: 8,
-      comments: 12,
-    },
-    location: {
-      latitude: 37.4562,
-      longitude: 126.7052,
-    },
+  content: post.description,
+  timeAgo: toHoursAgo(post.createdAt),
+  stats: {
+    likes: 0,
+    dislikes: 0,
   },
-  {
-    id: '3',
-    author: {
-      name: '류승찬',
-      avatar: '👤',
-    },
-    content: '상어 발견했습니다.',
-    timeAgo: '6시간 전',
-    stats: {
-      likes: 2,
-      comments: 12,
-    },
-    location: {
-      latitude: 37.3905,
-      longitude: 126.6356,
-    },
+  location: {
+    latitude: post.latitude,
+    longitude: post.longitude,
   },
-  {
-    id: '4',
-    author: {
-      name: '김동욱',
-      avatar: '👤',
-    },
-    content: '대왕고래 발견했습니다.',
-    timeAgo: '8시간 전',
-    stats: {
-      likes: 8,
-      comments: 12,
-    },
-    location: {
-      latitude: 37.4481,
-      longitude: 126.3820,
-    },
-  },
-];
+});
 
 /**
  * Fetch recent reports
@@ -87,11 +44,10 @@ const MOCK_REPORTS: Report[] = [
  * };
  */
 export const fetchRecentReports = async (): Promise<ReportsResponse> => {
-  await mockDelay(300); // Simulate network delay
-
+  const posts = await getPosts();
   return {
     success: true,
-    data: MOCK_REPORTS,
+    data: posts.map(toReport),
   };
 };
 
@@ -107,11 +63,10 @@ export const fetchRecentReports = async (): Promise<ReportsResponse> => {
  * };
  */
 export const fetchReportsByPage = async (page: number, limit: number = 10): Promise<ReportsResponse> => {
-  await mockDelay(300);
-
+  const posts = await getPosts();
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
-  const paginatedReports = MOCK_REPORTS.slice(startIndex, endIndex);
+  const paginatedReports = posts.slice(startIndex, endIndex).map(toReport);
 
   return {
     success: true,
@@ -132,12 +87,9 @@ export const fetchReportsByPage = async (page: number, limit: number = 10): Prom
  * };
  */
 export const fetchAvailableReportsForScenario = async (): Promise<ReportsResponse> => {
-  await mockDelay(300);
-
-  // Mock: Return all reports as available for scenarios
-  // In real implementation, this might filter by certain criteria
+  const posts = await getPosts();
   return {
     success: true,
-    data: MOCK_REPORTS,
+    data: posts.map(toReport),
   };
 };

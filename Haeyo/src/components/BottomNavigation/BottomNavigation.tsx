@@ -23,6 +23,7 @@ export const BottomNavigation = ({ activePage }: BottomNavigationProps) => {
       </button>
       <button 
         className={`${styles.navBtn} ${activePage === 'community' ? styles.active : ''}`}
+        onClick={() => navigate('/community')}
       >
         <svg width="23" height="18" viewBox="0 0 23 18" fill="none">
           <path d="M16 9C17.66 9 18.99 7.66 18.99 6C18.99 4.34 17.66 3 16 3C14.34 3 13 4.34 13 6C13 7.66 14.34 9 16 9ZM7 9C8.66 9 9.99 7.66 9.99 6C9.99 4.34 8.66 3 7 3C5.34 3 4 4.34 4 6C4 7.66 5.34 9 7 9ZM7 11C4.67 11 0 12.17 0 14.5V17H14V14.5C14 12.17 9.33 11 7 11ZM16 11C15.71 11 15.38 11.02 15.03 11.05C16.19 11.89 17 13.02 17 14.5V17H23V14.5C23 12.17 18.33 11 16 11Z" fill={activePage === 'community' ? '#171717' : '#737373'}/>

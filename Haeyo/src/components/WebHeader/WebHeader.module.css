@@ -1,0 +1,119 @@
+.header {
+  height: 64px;
+  background: white;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.anchorIcon {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.logoText {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #171717;
+  letter-spacing: -0.5px;
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navItem {
+  background: transparent;
+  border: none;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  color: #737373;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.navItem:hover {
+  color: #171717;
+}
+
+.navItem.active {
+  font-weight: 700;
+  color: #171717;
+}
+
+.navItem.active::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #171717;
+  border-radius: 2px 2px 0 0;
+}
+
+.userName {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #171717;
+  letter-spacing: -0.5px;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #737373;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+  background: #f5f5f5;
+  color: #171717;
+}
+
+.navBtn {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #171717;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navBtn:hover {
+  background: #f5f5f5;
+  border-color: #d4d4d4;
+}

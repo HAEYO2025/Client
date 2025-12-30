@@ -10,8 +10,15 @@ import { SafetyGuideMobile, SafetyGuideWeb } from './pages/SafetyGuide'
 import { ProfileMobile, ProfileWeb } from './pages/Profile'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
+import { ReportFormWeb, ReportFormMobile } from './pages/ReportForm';
+import { CommunityWeb, CommunityMobile } from './pages/Community'
+import { ReportDetailWeb, ReportDetailMobile } from './pages/ReportDetail'
 import './App.css'
 
+function ReportFormPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ReportFormMobile /> : <ReportFormWeb />
+}
 function LoginPage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <LoginMobile /> : <LoginWeb />
@@ -57,6 +64,16 @@ function ScenarioFeedbackPage() {
   return isMobile ? <ScenarioFeedback /> : <ScenarioFeedbackWeb />
 }
 
+function CommunityPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <CommunityMobile /> : <CommunityWeb />
+}
+
+function ReportDetailPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ReportDetailMobile /> : <ReportDetailWeb />
+}
+
 // Protected route component
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />
@@ -73,6 +90,14 @@ function App() {
           element={
             <PrivateRoute>
               <HomePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/reportform" 
+          element={
+            <PrivateRoute>
+              <ReportFormPage />
             </PrivateRoute>
           } 
         />
@@ -121,6 +146,22 @@ function App() {
           element={
             <PrivateRoute>
               <ProfilePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/community" 
+          element={
+            <PrivateRoute>
+              <CommunityPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/report/:id" 
+          element={
+            <PrivateRoute>
+              <ReportDetailPage />
             </PrivateRoute>
           } 
         />
