@@ -3,6 +3,7 @@ import { SignUpMobile, SignUpWeb } from './pages/SignUp'
 import { LoginMobile, LoginWeb } from './pages/Login'
 import { HomeMobile, HomeWeb } from './pages/Home'
 import { ScenarioCreate } from './pages/ScenarioCreate'
+import { ScenarioResult } from './pages/ScenarioResult'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
 import './App.css'
@@ -46,6 +47,14 @@ function App() {
           element={
             <PrivateRoute>
               <ScenarioCreate />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/scenario/result" 
+          element={
+            <PrivateRoute>
+              <ScenarioResult />
             </PrivateRoute>
           } 
         />
