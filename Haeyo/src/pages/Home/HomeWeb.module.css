@@ -10,6 +10,7 @@
 }
 
 /* Header */
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -470,4 +471,97 @@
 .sidebar::-webkit-scrollbar-thumb:hover,
 .commentsList::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+
+/* Map Markers */
+.marker {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.marker:hover {
+  transform: scale(1.1);
+}
+
+/* Map Controls */
+.mapControls {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.controlBtn {
+  width: 36px;
+  height: 36px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #374151;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s;
+}
+
+.controlBtn:hover {
+  background: #f9fafb;
+}
+
+/* Action Bar */
+.actionBar {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.actionBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.actionBtn:hover {
+  background: #f9fafb;
+}
+
+.actionBtn svg {
+  width: 24px;
+  height: 24px;
+  color: #374151;
+}
+
+.actionBtn span {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
 }

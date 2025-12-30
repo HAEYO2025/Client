@@ -2,7 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { SignUpMobile, SignUpWeb } from './pages/SignUp'
 import { LoginMobile, LoginWeb } from './pages/Login'
 import { HomeMobile, HomeWeb } from './pages/Home'
-import { ScenarioCreate } from './pages/ScenarioCreate'
+import { TrainingMobile, TrainingWeb } from './pages/Training'
+import { ScenarioCreate, ScenarioCreateWeb } from './pages/ScenarioCreate'
+import { ScenarioResult, ScenarioResultWeb } from './pages/ScenarioResult'
+import { ScenarioFeedback, ScenarioFeedbackWeb } from './pages/ScenarioFeedback'
+import { SafetyGuideMobile, SafetyGuideWeb } from './pages/SafetyGuide'
+import { ProfileMobile, ProfileWeb } from './pages/Profile'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
 import { ReportFormWeb, ReportFormMobile } from './pages/ReportForm';
@@ -29,6 +34,36 @@ function HomePage() {
   return isMobile ? <HomeMobile /> : <HomeWeb />
 }
 
+function TrainingPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <TrainingMobile /> : <TrainingWeb />
+}
+
+function ScenarioResultPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioResult /> : <ScenarioResultWeb />
+}
+
+function SafetyGuidePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <SafetyGuideMobile /> : <SafetyGuideWeb />
+}
+
+function ProfilePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ProfileMobile /> : <ProfileWeb />
+}
+
+function ScenarioCreatePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioCreate /> : <ScenarioCreateWeb />
+}
+
+function ScenarioFeedbackPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioFeedback /> : <ScenarioFeedbackWeb />
+}
+
 function CommunityPage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <CommunityMobile /> : <CommunityWeb />
@@ -48,7 +83,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route 
+          path="/home" 
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          } 
+        />
         <Route 
           path="/reportform" 
           element={
@@ -57,19 +101,78 @@ function App() {
             </PrivateRoute>
           } 
         />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
         <Route 
           path="/scenario/create" 
           element={
             <PrivateRoute>
-              <ScenarioCreate />
+              <ScenarioCreatePage />
             </PrivateRoute>
           } 
         />
-        <Route path="/community" element={<CommunityPage />} />
-        <Route path="/report/:id" element={<ReportDetailPage />} />
+        <Route 
+          path="/scenario/result" 
+          element={
+            <PrivateRoute>
+              <ScenarioResultPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/scenario/feedback" 
+          element={
+            <PrivateRoute>
+              <ScenarioFeedbackPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/training" 
+          element={
+            <PrivateRoute>
+              <TrainingPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/safety-guide" 
+          element={
+            <PrivateRoute>
+              <SafetyGuidePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/community" 
+          element={
+            <PrivateRoute>
+              <CommunityPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/report/:id" 
+          element={
+            <PrivateRoute>
+              <ReportDetailPage />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/" 
+          element={
+            isAuthenticated() ? 
+              <Navigate to="/home" replace /> : 
+              <Navigate to="/login" replace />
+          } 
+        />
       </Routes>
     </BrowserRouter>
   )

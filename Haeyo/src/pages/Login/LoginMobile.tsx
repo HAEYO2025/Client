@@ -11,7 +11,7 @@ import styles from './LoginMobile.module.css';
 export const LoginMobile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState<string>('');
@@ -51,30 +51,32 @@ export const LoginMobile = () => {
   return (
     <div className={styles['page-container']}>
       <Header />
-      <div className={styles['form-container']}>
-        <div className={styles['form-box']}>
-          <h2 className={styles['form-title']}>로그인</h2>
-          <form onSubmit={handleSubmit}>
-            <Input
-              label="아이디"
-              type="text"
-              id="username"
-              value={formData.username}
-              onChange={handleChange('username')}
-              required
-            />
-
-            <Input
-              label="비밀번호"
-              type="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange('password')}
-              required
-            />
-
-            {error && <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{error}</div>}
-
+      
+      <main className={styles.main}>
+        <h1 className={styles.title}>로그인</h1>
+        
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <Input
+            label="이메일"
+            type="email"
+            value={formData.email}
+            onChange={handleChange('email')}
+            placeholder="이메일을 입력하세요"
+            required
+          />
+          
+          <Input
+            label="비밀번호"
+            type="password"
+            value={formData.password}
+            onChange={handleChange('password')}
+            placeholder="비밀번호를 입력하세요"
+            required
+          />
+          
+          {error && <p className={styles.error}>{error}</p>}
+          
+          <div className={styles.actions}>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? '로그인 중...' : '로그인'}
             </Button>

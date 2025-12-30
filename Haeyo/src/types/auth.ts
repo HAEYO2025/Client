@@ -13,7 +13,7 @@ export interface SignUpFormData {
 }
 
 export interface LoginFormData {
-  username: string;
+  email: string;
   password: string;
 }
 

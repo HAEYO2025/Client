@@ -1,0 +1,340 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  width: 100%;
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoIcon {
+  font-size: 24px;
+}
+
+.logoText {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navItem {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.navItem:hover {
+  color: #000000;
+}
+
+.username {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.logoutBtn {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.logoutBtn:hover {
+  color: #000000;
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  background: #f9fafb;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.contentWrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.backBtn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.backBtn:hover {
+  background: #f3f4f6;
+}
+
+.pageTitle {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #000000;
+  margin: 0;
+}
+
+/* Form Container */
+.formContainer {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 40px;
+}
+
+/* Form Group */
+.formGroup {
+  margin-bottom: 32px;
+}
+
+.formGroup:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: #000000;
+  margin-bottom: 12px;
+}
+
+.required {
+  color: #ef4444;
+}
+
+/* Input Fields */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #000000;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #000000;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.textarea:focus {
+  border-color: #000000;
+}
+
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.textareaFooter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.hint {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.charCount {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* Date/Time Row */
+.dateTimeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dateInputWrapper,
+.timeInputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Report Card */
+.reportCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.reportIcon {
+  flex-shrink: 0;
+}
+
+.reportInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.reportContent {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  margin: 0 0 6px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reportAuthor {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.changeBtn {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.changeBtn:hover {
+  background: #f9fafb;
+}
+
+.reportCardLoading,
+.reportCardEmpty {
+  padding: 40px;
+  text-align: center;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.reportCardLoading p,
+.reportCardEmpty p {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Submit Button */
+.submitBtn {
+  width: 100%;
+  padding: 16px 24px;
+  margin-top: 40px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: #000000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+.submitBtn:hover {
+  background: #1f2937;
+}
+
+.submitBtn:active {
+  background: #374151;
+}

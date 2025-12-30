@@ -180,6 +180,7 @@ export const HomeWeb = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
+      {/* Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
           <img src="/logo.png" alt="Haeyo Logo" className={styles.anchorIcon} />

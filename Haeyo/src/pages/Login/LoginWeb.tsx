@@ -10,7 +10,7 @@ import styles from './LoginWeb.module.css';
 export const LoginWeb = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState<string>('');

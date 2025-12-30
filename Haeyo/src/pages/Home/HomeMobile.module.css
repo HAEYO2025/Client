@@ -5,7 +5,6 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
 }
 
 /* Header */
@@ -337,18 +336,6 @@
   gap: 12px;
 }
 
-.reportAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
 .reportContent {
   flex: 1;
   display: flex;
@@ -358,16 +345,8 @@
 
 .reportHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-}
-
-.reportName {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  color: #171717;
-  letter-spacing: -0.5px;
 }
 
 .reportTime {
