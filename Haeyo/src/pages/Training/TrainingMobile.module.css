@@ -32,6 +32,16 @@
   justify-content: center;
 }
 
+.menuBtn img {
+  width: 18px;
+  height: 20px;
+}
+
+.notificationBtn img {
+  width: 16px;
+  height: 18px;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -102,6 +112,22 @@
 
 .card:nth-child(2) .cardIcon {
   margin-bottom: 107px;
+}
+
+.iconImage {
+  width: 106px;
+  height: 106px;
+  object-fit: contain;
+}
+
+.card:nth-child(2) .iconImage {
+  width: 118px;
+  height: 118px;
+}
+
+.logoIcon {
+  width: 20px;
+  height: 18px;
 }
 
 .cardTitle {
@@ -186,4 +212,9 @@
 
 .fab:active {
   transform: scale(0.95);
+}
+
+.fab img {
+  width: 18px;
+  height: 20px;
 }

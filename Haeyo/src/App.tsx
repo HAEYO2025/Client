@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { SignUpMobile, SignUpWeb } from './pages/SignUp'
 import { LoginMobile, LoginWeb } from './pages/Login'
 import { HomeMobile, HomeWeb } from './pages/Home'
-import { TrainingMobile } from './pages/Training'
+import { TrainingMobile, TrainingWeb } from './pages/Training'
 import { ScenarioCreate } from './pages/ScenarioCreate'
 import { ScenarioResult } from './pages/ScenarioResult'
 import { ScenarioFeedback } from './pages/ScenarioFeedback'
@@ -24,6 +24,11 @@ function SignUpPage() {
 function HomePage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <HomeMobile /> : <HomeWeb />
+}
+
+function TrainingPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <TrainingMobile /> : <TrainingWeb />
 }
 
 // Protected route component
@@ -73,7 +78,7 @@ function App() {
           path="/training" 
           element={
             <PrivateRoute>
-              <TrainingMobile />
+              <TrainingPage />
             </PrivateRoute>
           } 
         />

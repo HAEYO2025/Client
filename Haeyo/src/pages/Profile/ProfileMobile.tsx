@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchProfileData } from '../../api/profile';
 import type { ProfileData } from '../../types/profile';
 import { BottomNavigation } from '../../components/BottomNavigation';
+import { FloatingActionButton } from '../../components/FloatingActionButton';
 import styles from './ProfileMobile.module.css';
 
 export const ProfileMobile = () => {
@@ -214,6 +215,9 @@ export const ProfileMobile = () => {
 
       {/* Bottom Navigation */}
       <BottomNavigation activePage="profile" />
+
+      {/* Floating Action Button */}
+      <FloatingActionButton />
     </div>
   );
 };
