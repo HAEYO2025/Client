@@ -10,7 +10,7 @@ import styles from './LoginWeb.module.css';
 export const LoginWeb = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState<string>('');
@@ -50,11 +50,11 @@ export const LoginWeb = () => {
         
         <form className={styles.form} onSubmit={handleSubmit}>
           <Input
-            label="아이디"
-            type="text"
-            value={formData.username}
-            onChange={handleChange('username')}
-            placeholder="아이디를 입력하세요"
+            label="이메일"
+            type="email"
+            value={formData.email}
+            onChange={handleChange('email')}
+            placeholder="이메일을 입력하세요"
             required
           />
           

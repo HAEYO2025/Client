@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SafetyGuideData } from '../../types/safetyGuide';
+import type { SafetyGuideData } from '../../types/safetyGuide';
 import styles from './SafetyGuideWeb.module.css';
 
 export const SafetyGuideWeb = () => {

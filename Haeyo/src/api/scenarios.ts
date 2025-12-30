@@ -1,4 +1,5 @@
 import type { Report } from '../types/report';
+import { getAuthHeaders } from './auth';
 
 export interface ScenarioRequest {
   report: {
@@ -175,11 +176,13 @@ export const createScenarioWithStreaming = async (
   };
 
   try {
-    const response = await fetch('http://0.0.0.0:8000/api/query/stream', {
+    const response = await fetch('/api/query/stream', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
+      credentials: 'include',
       body: JSON.stringify(requestBody),
     });
 

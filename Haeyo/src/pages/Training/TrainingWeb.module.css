@@ -1,24 +1,22 @@
 .container {
   width: 100%;
   min-height: 100vh;
-  background: white;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
   position: relative;
 }
 
 /* Header */
 .header {
   width: 100%;
-  height: 118px;
-  background: #fff5f5;
-  border-bottom: 1px solid #000000;
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 75px;
-  position: relative;
+  padding: 0 40px;
 }
 
 .logo {
@@ -27,77 +25,65 @@
   gap: 8px;
 }
 
-.icon {
-  font-size: 30px;
+.logoIcon {
+  font-size: 24px;
 }
 
-.text {
+.logoText {
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 900;
-  font-size: 30px;
-  color: #101010;
-  line-height: 1.45;
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
 }
 
 .nav {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  gap: 33px;
   align-items: center;
+  gap: 32px;
 }
 
 .navItem {
-  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
-  font-size: 18px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 18px;
-  color: #5d5a88;
+  color: #6b7280;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: font-weight 0.2s;
+  padding: 0;
+  transition: color 0.2s;
 }
 
 .navItem:hover {
-  font-weight: 600;
+  color: #000000;
 }
 
 .navItem.active {
-  font-weight: 700;
-}
-
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  color: #000000;
+  font-weight: 600;
 }
 
 .username {
-  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 18px;
-  color: #5d5a88;
-  padding: 18px 24px;
-  border-radius: 30px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #6b7280;
 }
 
 .logoutBtn {
-  padding: 18px 24px;
-  border: 1px solid #d4d2e3;
-  border-radius: 30px;
-  background: white;
-  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
-  font-size: 16px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 18px;
-  color: #5d5a88;
+  color: #6b7280;
+  background: none;
+  border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  padding: 0;
+  transition: color 0.2s;
 }
 
 .logoutBtn:hover {
-  background: #f5f5f5;
+  color: #000000;
 }
 
 /* Main Content */
@@ -106,45 +92,42 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 146px;
-  padding: 71px 240px;
+  gap: 60px;
+  padding: 80px 100px;
 }
 
 /* Cards */
 .card {
-  width: 406px;
-  height: 656px;
-  border: 1px solid black;
-  background: white;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  width: 380px;
+  height: 480px;
+  border: 1px solid #000000;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: transform 0.2s;
-  position: relative;
-  overflow: hidden;
+  gap: 40px;
 }
 
 .card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 
 .card:active {
   transform: translateY(0);
 }
 
-.cardIcon {
-  width: 197px;
-  height: 197px;
+.cardIconWrapper {
+  width: 160px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 78.5px;
 }
 
-.iconImage {
+.cardIcon {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -153,29 +136,26 @@
 .cardTitle {
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-weight: 700;
-  font-size: 40px;
-  line-height: normal;
-  letter-spacing: -0.5px;
-  color: black;
-  text-align: center;
+  font-size: 24px;
+  color: #000000;
   margin: 0;
 }
 
 /* Floating Action Button */
 .fab {
   position: fixed;
-  bottom: 57px;
-  right: 190px;
-  width: 100px;
-  height: 100px;
-  border-radius: 9999px;
-  background-color: #171717;
+  bottom: 40px;
+  right: 40px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #000000;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1), 0px 10px 15px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 100;
   transition: transform 0.2s;
 }
@@ -188,16 +168,11 @@
   transform: scale(0.95);
 }
 
-.fab svg {
-  width: 20px;
-  height: 20px;
-}
-
 .loadingOverlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(17, 24, 39, 0.35);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -207,29 +182,29 @@
 .loadingCard {
   background: #ffffff;
   border: 1px solid #000000;
-  border-radius: 16px;
-  padding: 18px 24px;
+  border-radius: 12px;
+  padding: 24px 32px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  gap: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
 .loadingSpinner {
-  width: 20px;
-  height: 20px;
-  border-radius: 999px;
-  border: 2px solid #d4d4d4;
-  border-top-color: #0a7a7e;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+  border-top-color: #000000;
   animation: spin 0.8s linear infinite;
 }
 
 .loadingText {
   margin: 0;
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
-  color: #171717;
+  color: #000000;
 }
 
 @keyframes spin {

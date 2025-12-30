@@ -60,37 +60,33 @@ export const TrainingWeb = () => {
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
-          <span className={styles.icon}>⚓</span>
-          <span className={styles.text}>해요</span>
+          <span className={styles.logoIcon}>⚓</span>
+          <span className={styles.logoText}>해요</span>
         </div>
         <nav className={styles.nav}>
-          <span className={styles.navItem} onClick={() => navigate('/home')}>지도</span>
-          <span className={styles.navItem}>커뮤니티</span>
-          <span className={`${styles.navItem} ${styles.active}`}>학습</span>
-          <span className={styles.navItem} onClick={() => navigate('/profile')}>프로필</span>
-        </nav>
-        <div className={styles.userSection}>
+          <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
+          <button className={styles.navItem}>커뮤니티</button>
+          <button className={`${styles.navItem} ${styles.active}`}>학습</button>
+          <button className={styles.navItem} onClick={() => navigate('/profile')}>프로필</button>
           <span className={styles.username}>{user?.userId || '???'}님</span>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
-            로그아웃
-          </button>
-        </div>
+          <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
+        </nav>
       </header>
 
       {/* Main Content */}
       <main className={styles.main}>
         {/* Scenario Generation Card */}
         <div className={styles.card} onClick={() => navigate('/scenario/create')}>
-          <div className={styles.cardIcon}>
-            <img src={aiFilesIcon} alt="AI Files" className={styles.iconImage} />
+          <div className={styles.cardIconWrapper}>
+            <img src={aiFilesIcon} alt="AI Files" className={styles.cardIcon} />
           </div>
           <h2 className={styles.cardTitle}>시나리오 생성</h2>
         </div>
 
         {/* Safety Guide Card */}
         <div className={styles.card} onClick={handleSafetyGuideClick}>
-          <div className={styles.cardIcon}>
-            <img src={secureShieldIcon} alt="Secure Shield" className={styles.iconImage} />
+          <div className={styles.cardIconWrapper}>
+            <img src={secureShieldIcon} alt="Secure Shield" className={styles.cardIcon} />
           </div>
           <h2 className={styles.cardTitle}>안전 가이드</h2>
         </div>
@@ -98,8 +94,8 @@ export const TrainingWeb = () => {
 
       {/* Floating Action Button */}
       <button className={styles.fab}>
-        <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-          <path d="M10 0H8V8H0V10H8V20H10V10H18V8H10V0Z" fill="white"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       </button>
 

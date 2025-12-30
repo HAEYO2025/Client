@@ -1,4 +1,5 @@
 import type { SafetyGuideRequest, SafetyGuideResponse } from '../types/safetyGuide';
+import { getAuthHeaders } from './auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -24,7 +25,9 @@ export const fetchSafetyGuide = async (
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
+      credentials: 'include',
     });
 
     if (!response.ok) {

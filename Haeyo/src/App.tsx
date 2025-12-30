@@ -3,11 +3,11 @@ import { SignUpMobile, SignUpWeb } from './pages/SignUp'
 import { LoginMobile, LoginWeb } from './pages/Login'
 import { HomeMobile, HomeWeb } from './pages/Home'
 import { TrainingMobile, TrainingWeb } from './pages/Training'
-import { ScenarioCreate } from './pages/ScenarioCreate'
-import { ScenarioResult } from './pages/ScenarioResult'
+import { ScenarioCreate, ScenarioCreateWeb } from './pages/ScenarioCreate'
+import { ScenarioResult, ScenarioResultWeb } from './pages/ScenarioResult'
 import { ScenarioFeedback } from './pages/ScenarioFeedback'
 import { SafetyGuideMobile, SafetyGuideWeb } from './pages/SafetyGuide'
-import { ProfileMobile } from './pages/Profile/ProfileMobile'
+import { ProfileMobile, ProfileWeb } from './pages/Profile'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
 import './App.css'
@@ -32,9 +32,24 @@ function TrainingPage() {
   return isMobile ? <TrainingMobile /> : <TrainingWeb />
 }
 
+function ScenarioResultPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioResult /> : <ScenarioResultWeb />
+}
+
 function SafetyGuidePage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <SafetyGuideMobile /> : <SafetyGuideWeb />
+}
+
+function ProfilePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ProfileMobile /> : <ProfileWeb />
+}
+
+function ScenarioCreatePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioCreate /> : <ScenarioCreateWeb />
 }
 
 // Protected route component
@@ -60,7 +75,7 @@ function App() {
           path="/scenario/create" 
           element={
             <PrivateRoute>
-              <ScenarioCreate />
+              <ScenarioCreatePage />
             </PrivateRoute>
           } 
         />
@@ -68,7 +83,7 @@ function App() {
           path="/scenario/result" 
           element={
             <PrivateRoute>
-              <ScenarioResult />
+              <ScenarioResultPage />
             </PrivateRoute>
           } 
         />
@@ -100,7 +115,7 @@ function App() {
           path="/profile" 
           element={
             <PrivateRoute>
-              <ProfileMobile />
+              <ProfilePage />
             </PrivateRoute>
           } 
         />
