@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Report } from '../../types/report';
 import { fetchRecentReports } from '../../api/reports';
 import styles from './HomeMobile.module.css';
 
 export const HomeMobile = () => {
+  const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -97,7 +99,7 @@ export const HomeMobile = () => {
               </svg>
               <span>제보하기</span>
             </button>
-            <button className={styles.actionBtn}>
+            <button className={styles.actionBtn} onClick={() => navigate('/scenario/create')}>
               <svg width="15" height="20" viewBox="0 0 15 20" fill="none">
                 <path d="M12 0H3C1.9 0 1 0.9 1 2V18C1 19.1 1.9 20 3 20H12C13.1 20 14 19.1 14 18V2C14 0.9 13.1 0 12 0ZM7.5 1.5C8.05 1.5 8.5 1.95 8.5 2.5C8.5 3.05 8.05 3.5 7.5 3.5C6.95 3.5 6.5 3.05 6.5 2.5C6.5 1.95 6.95 1.5 7.5 1.5ZM7.5 18.5C6.67 18.5 6 17.83 6 17C6 16.17 6.67 15.5 7.5 15.5C8.33 15.5 9 16.17 9 17C9 17.83 8.33 18.5 7.5 18.5Z" fill="#525252"/>
               </svg>
