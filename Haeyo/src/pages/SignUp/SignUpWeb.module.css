@@ -4,41 +4,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: white;
-  padding: 88px 20px;
+  background: #f5f5f5; /* Match LoginWeb background */
+  padding: 40px 20px;
 }
 
 .card {
   width: 100%;
-  max-width: 604px;
-  padding: 78px 46px 72px;
-  border: 1px solid #000000;
-  border-radius: 5px;
-  box-shadow: 0px 2px 3px 2px #c6c6c6;
-  background: white;
+  max-width: 450px; /* Slightly wider than Login (400px) for Signup fields */
+  padding: 40px 30px;
+  background-color: white;
+  border: 2px solid #ddd; /* Match LoginWeb border style */
+  border-radius: 4px;
+  /* Removed box-shadow to match LoginWeb flat look, or add it if preferred but consistency is key */
 }
 
 .title {
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 32px;
-  color: #000000;
+  font-weight: bold;
+  font-size: 24px; /* Match LoginWeb title size */
+  color: #333;
   text-align: center;
-  margin: 0 0 98px;
+  margin: 0 0 30px;
   line-height: normal;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 69px;
-}
-
-/* Web version input styles */
-.form input {
-  height: 51px;
-  border: 1px solid #5b5b5b;
-  border-radius: 5px;
+  gap: 20px;
 }
 
 .actions {
@@ -46,16 +39,7 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-}
-
-/* Web version button styles */
-.actions button[type="submit"] {
-  width: 100%;
-  margin-top: 70px;
-  height: 55px;
-  background: #d3d3d3;
-  border: 1px solid #f5f4f9;
-  border-radius: 5px;
+  margin-top: 30px;
 }
 
 .link {
@@ -63,14 +47,13 @@
   border: none;
   color: #0062ff;
   font-family: 'Pretendard Variable', sans-serif;
-  font-weight: 600;
-  font-size: 12px;
+  font-weight: 500; /* Match LoginWeb */
+  font-size: 14px;
   cursor: pointer;
-  padding: 0;
-  margin: 0;
-  height: auto;
+  padding: 5px;
+  text-decoration: underline;
 }
 
 .link:hover {
-  text-decoration: underline;
+  color: #124eaf;
 }

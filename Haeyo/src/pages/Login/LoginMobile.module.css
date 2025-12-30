@@ -1,52 +1,45 @@
-.container {
+.page-container {
   width: 100%;
   height: 100vh;
-  background: white;
-  overflow-y: auto;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-}
-
-.main {
-  padding: 53px 17px 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-}
-
-.title {
-  font-family: 'Pretendard Variable', sans-serif;
-  font-weight: 600;
-  font-size: 32px;
-  color: #000000;
-  margin: 0 0 253px;
-  line-height: normal;
-}
-
-.form {
-  width: 100%;
-  max-width: 342px;
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 280px;
-  align-items: center;
-}
-
-.error {
-  color: #dc2626;
-  font-size: 14px;
-  text-align: center;
+  background-color: #ffffff; /* Typically white for mobile apps */
   margin: 0;
-  padding: 8px;
-  background: #fee2e2;
-  border-radius: 4px;
+  padding: 0;
 }
+
+.form-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  /* Remove centering and fixed width constraints for mobile */
+}
+
+.form-box {
+  width: 100%;
+  /* No border/shadow for mobile app look */
+  background: transparent;
+  padding: 20px 0;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Local input overrides if needed, but component styles should suffice */
+
+.link-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+

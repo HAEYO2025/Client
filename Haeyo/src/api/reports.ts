@@ -15,7 +15,7 @@ const MOCK_REPORTS: Report[] = [
     timeAgo: '2시간 전',
     stats: {
       likes: 12,
-      comments: 12,
+      dislikes: 12,
     },
     location: {
       latitude: 37.5665,
@@ -32,7 +32,7 @@ const MOCK_REPORTS: Report[] = [
     timeAgo: '4시간 전',
     stats: {
       likes: 8,
-      comments: 12,
+      dislikes: 12,
     },
     location: {
       latitude: 37.4562,
@@ -49,7 +49,7 @@ const MOCK_REPORTS: Report[] = [
     timeAgo: '6시간 전',
     stats: {
       likes: 2,
-      comments: 12,
+      dislikes: 12,
     },
     location: {
       latitude: 37.3905,
@@ -66,7 +66,7 @@ const MOCK_REPORTS: Report[] = [
     timeAgo: '8시간 전',
     stats: {
       likes: 8,
-      comments: 12,
+      dislikes: 12,
     },
     location: {
       latitude: 37.4481,

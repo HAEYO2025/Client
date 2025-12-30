@@ -19,10 +19,9 @@
 }
 
 .icon {
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .text {

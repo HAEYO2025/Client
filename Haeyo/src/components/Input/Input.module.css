@@ -1,35 +1,28 @@
 .inputWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  margin-bottom: 20px;
 }
 
 .label {
-  font-family: 'Pretendard Variable', sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-  color: #000000;
-  line-height: normal;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
 }
 
 .input {
   width: 100%;
-  height: 56px;
-  padding: 16px;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  font-family: 'Pretendard Variable', sans-serif;
-  font-size: 16px;
-  background: white;
-  outline: none;
-  transition: border-color 0.2s;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .input:focus {
-  border-color: #0062ff;
-}
-
-.input::placeholder {
-  color: #999999;
+  outline: none;
+  border-color: #999;
 }

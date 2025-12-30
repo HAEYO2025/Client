@@ -21,6 +21,44 @@
   z-index: 100;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loginBtn {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: #171717;
+  cursor: pointer;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.userName {
+  font-size: 13px;
+  color: #171717;
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #666;
+  cursor: pointer;
+}
+
 .menuBtn,
 .notificationBtn {
   background: transparent;
@@ -39,6 +77,12 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.logoIcon {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
 }
 
 .logoText {
@@ -60,7 +104,7 @@
 /* Map Section */
 .mapSection {
   height: 500px;
-  background: #f5f5f5;
+  background: white;
   overflow: hidden;
   position: relative;
 }
@@ -68,7 +112,7 @@
 .mapPlaceholder {
   width: 100%;
   height: 100%;
-  background: #e5e5e5;
+  background: white;
   position: relative;
   display: flex;
   align-items: center;
@@ -95,12 +139,18 @@
   font-size: 12px;
   color: white;
   letter-spacing: -0.5px;
+  border: 2px solid white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.filterBtn {
+.filterContainer {
   position: absolute;
   top: 16px;
   left: 16px;
+  z-index: 20;
+}
+
+.filterBtn {
   height: 36px;
   padding: 0 12px;
   background: white;
@@ -116,6 +166,55 @@
   font-size: 14px;
   color: #404040;
   letter-spacing: -0.5px;
+  transition: all 0.2s;
+}
+
+.filterBtn.active {
+  background: #171717;
+  color: white;
+}
+
+.filterDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1), 0px 4px 6px -2px rgba(0,0,0,0.05);
+  padding: 8px;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 30;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownItem {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: #525252;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dropdownItem:hover {
+  background: #f5f5f5;
+}
+
+.dropdownItem.selected {
+  font-weight: 700;
+  color: #171717;
+  background: #f0f0f0;
 }
 
 .mapControls {
@@ -125,6 +224,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 20;
 }
 
 .controlBtn {
@@ -342,18 +442,84 @@
   color: #171717;
 }
 
+.navBtn img {
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
+
+.navBtn.active img {
+  filter: none;
+  opacity: 1;
+}
+
 .navBtn.active svg path {
   fill: #171717;
 }
 
-/* Floating Action Button */
-.fab {
+/* FAB Menu */
+.fabWrapper {
   position: fixed;
   bottom: 90px;
   right: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 99;
+}
+
+.fabMenu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+  margin-bottom: 4px;
+  border: 1px solid #e5e5e5;
+  animation: slideUpFab 0.3s ease-out;
+}
+
+@keyframes slideUpFab {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fabItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.fabItemCircle {
+  width: 44px;
+  height: 44px;
+  background: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.fabItemLabel {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #404040;
+}
+
+.fab {
   width: 56px;
   height: 56px;
-  background: #171717;
+  background: #00AEF0; /* Brighter blue from image */
   border: none;
   border-radius: 50%;
   box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1), 0px 10px 15px 0px rgba(0, 0, 0, 0.1);
@@ -361,9 +527,16 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 99;
+}
+
+.fab svg {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab.active svg {
+  transform: rotate(45deg);
 }
 
 .fab:hover {
-  background: #262626;
+  filter: brightness(1.1);
 }

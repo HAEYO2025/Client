@@ -5,8 +5,15 @@ import { HomeMobile, HomeWeb } from './pages/Home'
 import { ScenarioCreate } from './pages/ScenarioCreate'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
+import { ReportFormWeb, ReportFormMobile } from './pages/ReportForm';
+import { CommunityWeb, CommunityMobile } from './pages/Community'
+import { ReportDetailWeb, ReportDetailMobile } from './pages/ReportDetail'
 import './App.css'
 
+function ReportFormPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ReportFormMobile /> : <ReportFormWeb />
+}
 function LoginPage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <LoginMobile /> : <LoginWeb />
@@ -22,6 +29,16 @@ function HomePage() {
   return isMobile ? <HomeMobile /> : <HomeWeb />
 }
 
+function CommunityPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <CommunityMobile /> : <CommunityWeb />
+}
+
+function ReportDetailPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ReportDetailMobile /> : <ReportDetailWeb />
+}
+
 // Protected route component
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />
@@ -31,16 +48,18 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route 
-          path="/home" 
+          path="/reportform" 
           element={
             <PrivateRoute>
-              <HomePage />
+              <ReportFormPage />
             </PrivateRoute>
           } 
         />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route 
           path="/scenario/create" 
           element={
@@ -49,14 +68,8 @@ function App() {
             </PrivateRoute>
           } 
         />
-        <Route 
-          path="/" 
-          element={
-            isAuthenticated() ? 
-              <Navigate to="/home" replace /> : 
-              <Navigate to="/login" replace />
-          } 
-        />
+        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/report/:id" element={<ReportDetailPage />} />
       </Routes>
     </BrowserRouter>
   )
