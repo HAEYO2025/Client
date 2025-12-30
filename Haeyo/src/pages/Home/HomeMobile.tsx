@@ -255,8 +255,6 @@ export const HomeMobile = () => {
             </button>
           </div>
         </div>
-
-        {/* Action Buttons */}
         <div className={styles.actionSection}>
           <div className={styles.actionButtons}>
             <button className={styles.actionBtn} onClick={() => navigate('/reportform')}>
