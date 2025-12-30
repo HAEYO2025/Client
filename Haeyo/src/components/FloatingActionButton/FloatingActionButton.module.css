@@ -1,8 +1,8 @@
 /* Floating Action Menu */
 .fabMenuContainer {
   position: fixed;
-  bottom: 160px;
-  right: 0px;
+  bottom: 165px;
+  right: 9px;
   z-index: 98;
 }
 
@@ -11,10 +11,10 @@
   border: 1px solid black;
   border-radius: 80px;
   box-shadow: 0px 2px 2px 0px black;
-  padding: 16px 0;
+  padding: 16px 0 24px 0;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
   align-items: center;
   width: 70px;
 }
@@ -41,21 +41,22 @@
 
 .fabMenuLabel {
   position: absolute;
-  bottom: -20px;
+  bottom: -18px;
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   color: #525252;
   letter-spacing: -0.5px;
   text-align: center;
   white-space: nowrap;
+  width: 60px;
 }
 
 /* Floating Action Button */
 .fab {
   position: fixed;
   bottom: 90px;
-  right: 0px;
+  right: 16px;
   width: 56px;
   height: 56px;
   background: #171717;
