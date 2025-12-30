@@ -1,7 +1,7 @@
 import type { SafetyGuideRequest, SafetyGuideResponse } from '../types/safetyGuide';
 import { getAuthHeaders } from './auth';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * Fetch safety guide information
@@ -34,7 +34,16 @@ export const fetchSafetyGuide = async (
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    const payload = await response.json();
+    const data = payload?.data ?? payload;
+
+    if (payload?.success === false) {
+      return {
+        success: false,
+        error: payload?.message || '안전 가이드 정보를 불러오는데 실패했습니다.',
+      };
+    }
+
     return {
       success: true,
       data,

@@ -5,6 +5,7 @@ import {
   type Choice,
   type ScenarioFeedback,
   type ScenarioHistoryEntry,
+  type ScenarioSaveHistoryEntry,
   type ScenarioSurvivalRate,
   type ScenarioStreamChunk,
 } from '../../api/scenarios';
@@ -38,6 +39,7 @@ export const ScenarioResult = () => {
   const [showChoices, setShowChoices] = useState(true);
   const [customChoiceText, setCustomChoiceText] = useState('');
   const [survivalRate, setSurvivalRate] = useState<ScenarioSurvivalRate | null>(null);
+  const [isFinalizing, setIsFinalizing] = useState(false);
 
   const situationRef = useRef<HTMLDivElement>(null);
   const hasAutoNavigated = useRef(false);
@@ -105,6 +107,7 @@ export const ScenarioResult = () => {
       setCurrentPageIndex(0);
       setSurvivalRate(null);
       hasAutoNavigated.current = false;
+      setIsFinalizing(false);
       finalTurnTargetRef.current = null;
       await createScenarioWithStreaming(
         state.selectedReport,
@@ -137,6 +140,7 @@ export const ScenarioResult = () => {
     setShowFog(false);
     setSurvivalRate(null);
     hasAutoNavigated.current = false;
+    setIsFinalizing(false);
     finalTurnTargetRef.current = null;
 
     createScenarioWithStreaming(
@@ -212,6 +216,18 @@ export const ScenarioResult = () => {
         feedback: page.feedback as ScenarioFeedback,
       }));
 
+  const buildSaveHistory = () => {
+    const normalizedRate = survivalRate ? Number((survivalRate.survival_rate / 100).toFixed(2)) : 0;
+    return pages
+      .filter((page) => page.selectedChoice)
+      .map((page) => ({
+        situation: page.situation,
+        choice: page.selectedChoice?.text ?? '',
+        survival_rate: normalizedRate,
+        comment: page.feedback?.comment || '',
+      })) as ScenarioSaveHistoryEntry[];
+  };
+
   useEffect(() => {
     const feedbackCount = pages.filter((page) => page.feedback).length;
     const target = finalTurnTargetRef.current;
@@ -220,6 +236,10 @@ export const ScenarioResult = () => {
       navigate('/scenario/feedback', {
         state: {
           scenarioTitle: state?.scenarioTitle ?? '제목',
+          scenarioDescription: state?.scenarioDescription ?? '',
+          startDate: state?.startDate ?? '',
+          report: state?.selectedReport ?? null,
+          history: buildSaveHistory(),
           feedbackEntries: buildFeedbackEntries(),
           survivalRate,
         },
@@ -237,6 +257,44 @@ export const ScenarioResult = () => {
       finalTurnTargetRef.current = 10;
     }
 
+    const finalizeScenario = () => {
+      setIsFinalizing(true);
+      setError(null);
+      setIsStreaming(true);
+      setShowFog(false);
+      setShowChoices(false);
+
+      createScenarioWithStreaming(
+        state.selectedReport,
+        state.scenarioTitle,
+        state.scenarioDescription,
+        state.startDate,
+        (chunk) => {
+          if (chunk.type === 'feedback' && chunk.feedback) {
+            setPages((prev) => {
+              const next = [...prev];
+              const current = next[currentPageIndex];
+              if (!current) {
+                return prev;
+              }
+              next[currentPageIndex] = { ...current, feedback: chunk.feedback };
+              return next;
+            });
+          } else if (chunk.type === 'survival_rate' && chunk.survivalRate) {
+            setSurvivalRate(chunk.survivalRate);
+          } else if (chunk.type === 'done') {
+            setIsStreaming(false);
+          } else if (chunk.type === 'error') {
+            setError(chunk.error || '오류가 발생했습니다.');
+            setIsStreaming(false);
+          }
+        },
+        {
+          history,
+        }
+      );
+    };
+
     const nextIndex = pages.length;
     setPages((prev) => {
       const next = [...prev];
@@ -244,10 +302,18 @@ export const ScenarioResult = () => {
       if (current) {
         next[currentPageIndex] = { ...current, selectedChoice: choice };
       }
-      next.push({ situation: '', choices: [] });
+      if (history.length < 10) {
+        next.push({ situation: '', choices: [] });
+      }
       return next;
     });
-    setCurrentPageIndex(nextIndex);
+    setCurrentPageIndex(history.length < 10 ? nextIndex : currentPageIndex);
+
+    if (history.length >= 10) {
+      finalizeScenario();
+      return;
+    }
+
     setError(null);
     setIsStreaming(true);
     setShowFog(false);
@@ -278,6 +344,10 @@ export const ScenarioResult = () => {
     navigate('/scenario/feedback', {
       state: {
         scenarioTitle: state?.scenarioTitle ?? '제목',
+        scenarioDescription: state?.scenarioDescription ?? '',
+        startDate: state?.startDate ?? '',
+        report: state?.selectedReport ?? null,
+        history: buildSaveHistory(),
         feedbackEntries: buildFeedbackEntries(),
         survivalRate,
       },
@@ -298,7 +368,9 @@ export const ScenarioResult = () => {
 
   useEffect(() => {
     const currentChoices = pages[currentPageIndex]?.choices || [];
-    setShowChoices(currentChoices.length > 0);
+    if (!isFinalizing) {
+      setShowChoices(currentChoices.length > 0);
+    }
   }, [pages, currentPageIndex]);
 
   const isHistoryView = pages.length > 0 && currentPageIndex !== pages.length - 1;
@@ -448,6 +520,15 @@ export const ScenarioResult = () => {
           </svg>
         </button>
       </div>
+
+      {isFinalizing && (
+        <div className={styles.finalizingOverlay} role="status" aria-live="polite">
+          <div className={styles.finalizingCard}>
+            <span className={styles.finalizingSpinner} aria-hidden="true" />
+            <p className={styles.finalizingText}>결과 정리 중...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchProfileData } from '../../api/profile';
+import { fetchScenarioById } from '../../api/scenarios';
 import type { ProfileData } from '../../types/profile';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { FloatingActionButton } from '../../components/FloatingActionButton';
 import { Header } from '../../components/Header';
+import { logout } from '../../api/auth';
 import styles from './ProfileMobile.module.css';
 
 export const ProfileMobile = () => {
@@ -12,17 +14,23 @@ export const ProfileMobile = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'reports' | 'scenarios'>('reports');
+  const [loadingScenarioId, setLoadingScenarioId] = useState<string | null>(null);
 
   useEffect(() => {
     const loadProfile = async () => {
       try {
         setIsLoading(true);
         const response = await fetchProfileData();
-        if (response.success) {
-          setProfileData(response.data);
+        if (!response.success) {
+          alert('로그인이 필요합니다.');
+          navigate('/login');
+          return;
         }
+        setProfileData(response.data);
       } catch (error) {
         console.error('Failed to fetch profile:', error);
+        alert('로그인이 필요합니다.');
+        navigate('/login');
       } finally {
         setIsLoading(false);
       }
@@ -30,6 +38,46 @@ export const ProfileMobile = () => {
 
     loadProfile();
   }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const handleScenarioClick = async (scenarioId: string) => {
+    if (loadingScenarioId) {
+      return;
+    }
+    try {
+      setLoadingScenarioId(scenarioId);
+      const detail = await fetchScenarioById(scenarioId);
+      const data = detail?.data && typeof detail.data === 'object' ? (detail.data as Record<string, unknown>) : detail;
+      const history = (data.history as Array<{ survival_rate?: number }>) || [];
+      const lastRate = history.length > 0 ? history[history.length - 1]?.survival_rate : undefined;
+      const survivalRate =
+        typeof lastRate === 'number'
+          ? { survival_rate: Math.round(lastRate * 100), change: '' }
+          : null;
+
+      navigate('/scenario/feedback', {
+        state: {
+          scenarioTitle: (data.title as string) || '',
+          scenarioDescription: (data.description as string) || '',
+          startDate: (data.startTime as string) || (data.start_date as string) || '',
+          report: (data.report as object) || null,
+          history,
+          feedbackEntries: [],
+          survivalRate,
+          shouldSave: false,
+        },
+      });
+    } catch (error) {
+      console.error('Failed to fetch scenario detail:', error);
+      alert('시나리오 상세 정보를 불러오지 못했습니다.');
+    } finally {
+      setLoadingScenarioId(null);
+    }
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -71,6 +119,8 @@ export const ProfileMobile = () => {
   }
 
   const { profile, recentReports, recentScenarios } = profileData;
+  const reportCount = recentReports.length;
+  const scenarioCount = recentScenarios.length;
 
   return (
     <div className={styles.container}>
@@ -83,15 +133,16 @@ export const ProfileMobile = () => {
         <div className={styles.profileSection}>
           <h2 className={styles.userName}>{profile.name}</h2>
           <p className={styles.userEmail}>{profile.email}</p>
+          <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
           
           <div className={styles.statsContainer}>
             <div className={styles.statItem}>
-              <span className={styles.statValue}>{profile.stats.reportsCount}</span>
+              <span className={styles.statValue}>{reportCount}</span>
               <span className={styles.statLabel}>제보</span>
             </div>
             <div className={styles.statDivider} />
             <div className={styles.statItem}>
-              <span className={styles.statValue}>{profile.stats.scenariosCount}</span>
+              <span className={styles.statValue}>{scenarioCount}</span>
               <span className={styles.statLabel}>시나리오</span>
             </div>
           </div>
@@ -158,17 +209,9 @@ export const ProfileMobile = () => {
                   key={scenario.id} 
                   className={styles.scenarioCard}
                   onClick={() => {
-                    if (scenario.feedbackData) {
-                      navigate('/scenario/feedback', {
-                        state: {
-                          scenarioTitle: scenario.title,
-                          feedbackEntries: scenario.feedbackData.feedbackEntries,
-                          survivalRate: scenario.feedbackData.survivalRate,
-                        },
-                      });
-                    }
+                    handleScenarioClick(scenario.id);
                   }}
-                  style={{ cursor: scenario.feedbackData ? 'pointer' : 'default' }}
+                  style={{ cursor: 'pointer', opacity: loadingScenarioId === scenario.id ? 0.6 : 1 }}
                 >
                   <div className={styles.scenarioHeader}>
                     <h4 className={styles.scenarioTitle}>{scenario.title}</h4>
@@ -176,12 +219,6 @@ export const ProfileMobile = () => {
                   </div>
                   <p className={styles.scenarioDescription}>{scenario.description}</p>
                   <div className={styles.scenarioFooter}>
-                    <div className={styles.survivalRate}>
-                      <span className={styles.survivalLabel}>생존율</span>
-                      <span className={`${styles.survivalValue} ${scenario.survivalRate >= 70 ? styles.survivalGood : styles.survivalBad}`}>
-                        {scenario.survivalRate}%
-                      </span>
-                    </div>
                     <span className={`${styles.statusBadge} ${styles[scenario.status]}`}>
                       {scenario.status === 'completed' ? '완료' : '진행 중'}
                     </span>

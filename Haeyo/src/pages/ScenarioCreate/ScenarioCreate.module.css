@@ -4,7 +4,6 @@
   background: white;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 /* Header */

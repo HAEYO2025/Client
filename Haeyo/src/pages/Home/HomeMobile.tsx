@@ -61,7 +61,8 @@ export const HomeMobile = () => {
 
       const response = await fetchSafetyGuide(request);
       if (response.success) {
-        navigate('/safety-guide', { state: response.data });
+        sessionStorage.setItem('safetyGuideData', JSON.stringify(response.data));
+        navigate('/safety-guide');
       } else {
         console.error('Failed to fetch safety guide:', response.error);
         alert('안전 가이드 정보를 불러오는데 실패했습니다.');

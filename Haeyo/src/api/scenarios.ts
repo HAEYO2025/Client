@@ -1,6 +1,8 @@
 import type { Report } from '../types/report';
 import { getAuthHeaders } from './auth';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+
 export interface ScenarioRequest {
   report: {
     title: string;
@@ -20,6 +22,29 @@ export interface ScenarioRequest {
 export interface ScenarioHistoryEntry {
   situation: string;
   choice: string;
+}
+
+export interface ScenarioSaveHistoryEntry {
+  situation: string;
+  choice: string;
+  survival_rate: number;
+  comment?: string;
+}
+
+export interface ScenarioSaveRequest {
+  scenario: {
+    title: string;
+    description: string;
+    start_date: string;
+  };
+  report: {
+    title: string;
+    description: string;
+    latitude: number;
+    longitude: number;
+    reported_date: string;
+  };
+  history: ScenarioSaveHistoryEntry[];
 }
 
 export interface ScenarioFeedback {
@@ -313,4 +338,39 @@ export const createScenarioWithStreaming = async (
       error: error instanceof Error ? error.message : 'Unknown error occurred',
     });
   }
+};
+
+export const saveScenario = async (payload: ScenarioSaveRequest): Promise<void> => {
+  const response = await fetch(`${API_BASE_URL}/api/scenarios`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `HTTP error! status: ${response.status}`);
+  }
+};
+
+export const fetchScenarioById = async (id: string | number): Promise<Record<string, unknown>> => {
+  const response = await fetch(`${API_BASE_URL}/api/scenarios/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `HTTP error! status: ${response.status}`);
+  }
+
+  return (await response.json()) as Record<string, unknown>;
 };

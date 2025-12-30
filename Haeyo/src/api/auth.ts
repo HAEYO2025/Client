@@ -4,6 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 const SIGNUP_URL = `${API_BASE_URL}/api/auth/signup`;
 const LOGIN_URL = `${API_BASE_URL}/api/auth/login`;
 const REFRESH_URL = `${API_BASE_URL}/api/auth/refresh`;
+const LOGOUT_URL = `${API_BASE_URL}/api/auth/logout`;
 
 const parseJson = async (response: Response): Promise<Record<string, unknown>> => {
   try {
@@ -143,10 +144,22 @@ export const getAuthHeaders = (): Record<string, string> => {
 /**
  * Logout - clear localStorage
  */
-export const logout = (): void => {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('loginTime');
+export const logout = async (): Promise<void> => {
+  try {
+    await fetch(LOGOUT_URL, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        ...getAuthHeaders(),
+      },
+    });
+  } catch (error) {
+    console.error('Failed to logout:', error);
+  } finally {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('loginTime');
+  }
 };
 
 /**

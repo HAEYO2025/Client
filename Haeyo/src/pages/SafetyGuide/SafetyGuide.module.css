@@ -4,7 +4,6 @@
   background: #f2f8ff;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   --ink: #0b1f2a;
   --ink-soft: #2c4654;
   --sea: #0a7a7e;

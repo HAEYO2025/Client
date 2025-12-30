@@ -6,6 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/api/ocean': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
       '/api/query': {
         target: 'http://localhost:8000',
         changeOrigin: true,

@@ -1,4 +1,7 @@
 import type { ProfileData, UserProfile, UserReport, UserScenario, ApiResponse } from '../types/profile';
+import { getAuthHeaders } from './auth';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 // Mock data
 const mockProfile: UserProfile = {
@@ -155,17 +158,75 @@ const mockScenarios: UserScenario[] = [
 
 // Mock API functions
 export const fetchProfileData = async (): Promise<ApiResponse<ProfileData>> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  const userResponse = await fetchCurrentUser();
+  if (!userResponse.success) {
+    return {
+      success: false,
+      data: {
+        profile: mockProfile,
+        recentReports: [],
+        recentScenarios: [],
+      },
+      error: userResponse.error,
+    };
+  }
+
+  const scenariosResponse = await fetchUserScenarios();
 
   return {
     success: true,
     data: {
-      profile: mockProfile,
-      recentReports: mockReports,
-      recentScenarios: mockScenarios,
+      profile: userResponse.data,
+      recentReports: [],
+      recentScenarios: scenariosResponse.success ? scenariosResponse.data : [],
     },
   };
+};
+
+export const fetchCurrentUser = async (): Promise<ApiResponse<UserProfile>> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const payload = (await response.json()) as {
+      data?: { id?: string | number; email?: string; name?: string; joinDate?: string };
+    };
+    const data = payload.data || payload;
+    const email = data.email || 'unknown@example.com';
+    const name = data.name || email.split('@')[0] || '사용자';
+
+    return {
+      success: true,
+      data: {
+        id: data.id ? `${data.id}` : 'unknown',
+        name,
+        email,
+        avatar: '👤',
+        joinDate: data.joinDate || new Date().toISOString().slice(0, 10),
+        stats: {
+          reportsCount: 0,
+          scenariosCount: 0,
+        },
+      },
+    };
+  } catch (error) {
+    console.error('Failed to fetch current user:', error);
+    return {
+      success: false,
+      data: mockProfile,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
 };
 
 export const fetchUserReports = async (): Promise<ApiResponse<UserReport[]>> => {
@@ -178,10 +239,51 @@ export const fetchUserReports = async (): Promise<ApiResponse<UserReport[]>> => 
 };
 
 export const fetchUserScenarios = async (): Promise<ApiResponse<UserScenario[]>> => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/scenarios/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+      credentials: 'include',
+    });
 
-  return {
-    success: true,
-    data: mockScenarios,
-  };
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{
+        id: number | string;
+        title: string;
+        description: string;
+        createdAt?: string;
+        startTime?: string;
+      }>;
+    };
+
+    const items = payload.data || [];
+    const normalized: UserScenario[] = items.map((item) => ({
+      id: `${item.id}`,
+      title: item.title,
+      description: item.description,
+      createdAt: item.createdAt || item.startTime || new Date().toISOString(),
+      survivalRate: 0,
+      status: 'completed',
+      feedbackData: undefined,
+    }));
+
+    return {
+      success: true,
+      data: normalized,
+    };
+  } catch (error) {
+    console.error('Failed to fetch user scenarios:', error);
+    return {
+      success: false,
+      data: mockScenarios,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
 };

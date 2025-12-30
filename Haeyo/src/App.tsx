@@ -5,7 +5,7 @@ import { HomeMobile, HomeWeb } from './pages/Home'
 import { TrainingMobile, TrainingWeb } from './pages/Training'
 import { ScenarioCreate, ScenarioCreateWeb } from './pages/ScenarioCreate'
 import { ScenarioResult, ScenarioResultWeb } from './pages/ScenarioResult'
-import { ScenarioFeedback } from './pages/ScenarioFeedback'
+import { ScenarioFeedback, ScenarioFeedbackWeb } from './pages/ScenarioFeedback'
 import { SafetyGuideMobile, SafetyGuideWeb } from './pages/SafetyGuide'
 import { ProfileMobile, ProfileWeb } from './pages/Profile'
 import { useMediaQuery } from './hooks/useMediaQuery'
@@ -52,6 +52,11 @@ function ScenarioCreatePage() {
   return isMobile ? <ScenarioCreate /> : <ScenarioCreateWeb />
 }
 
+function ScenarioFeedbackPage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <ScenarioFeedback /> : <ScenarioFeedbackWeb />
+}
+
 // Protected route component
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />
@@ -91,7 +96,7 @@ function App() {
           path="/scenario/feedback" 
           element={
             <PrivateRoute>
-              <ScenarioFeedback />
+              <ScenarioFeedbackPage />
             </PrivateRoute>
           } 
         />

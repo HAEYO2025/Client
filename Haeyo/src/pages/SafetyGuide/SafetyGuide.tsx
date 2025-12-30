@@ -38,15 +38,24 @@ export const SafetyGuide = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as SafetyGuideLocationState | undefined;
+  const cachedState = (() => {
+    try {
+      const raw = sessionStorage.getItem('safetyGuideData');
+      return raw ? (JSON.parse(raw) as SafetyGuideLocationState) : undefined;
+    } catch {
+      return undefined;
+    }
+  })();
+  const resolvedState = state || cachedState;
 
   useEffect(() => {
-    if (!state) {
+    if (!resolvedState) {
       navigate('/training');
     }
-  }, [state, navigate]);
+  }, [resolvedState, navigate]);
 
   const tideSeries = useMemo(() => {
-    const data = state?.ocean_data?.result?.data || [];
+    const data = resolvedState?.ocean_data?.result?.data || [];
     return data
       .map((entry) => ({
         level: toNumber(entry.tide_level),
@@ -78,11 +87,11 @@ export const SafetyGuide = () => {
       .join(' ');
   }, [tidePreview]);
 
-  if (!state) {
+  if (!resolvedState) {
     return null;
   }
 
-  const riskInfo = riskMeta(state.risk_level);
+  const riskInfo = riskMeta(resolvedState.risk_level);
 
   return (
     <div className={styles.container}>
@@ -101,22 +110,22 @@ export const SafetyGuide = () => {
             <div>
               <p className={styles.heroLabel}>위험도</p>
               <div className={styles.heroScore}>
-                <span>{state.risk_score ?? '--'}</span>
+              <span>{resolvedState.risk_score ?? '--'}</span>
                 <span className={`${styles.heroBadge} ${riskInfo.className}`}>{riskInfo.label}</span>
               </div>
             </div>
             <div className={styles.heroMeta}>
-              <span>{formatDate(state.date)}</span>
-              {state.station_info?.obs_name && (
-                <span>관측소 {state.station_info.obs_name}</span>
+              <span>{formatDate(resolvedState.date)}</span>
+              {resolvedState.station_info?.obs_name && (
+                <span>관측소 {resolvedState.station_info.obs_name}</span>
               )}
             </div>
           </div>
-          <p className={styles.heroSummary}>{state.summary || '안전 가이드 정보를 확인하세요.'}</p>
+          <p className={styles.heroSummary}>{resolvedState.summary || '안전 가이드 정보를 확인하세요.'}</p>
           <div className={styles.heroLocation}>
-            <span>좌표 {state.location.latitude.toFixed(4)}, {state.location.longitude.toFixed(4)}</span>
-            {state.station_info?.distance_km !== undefined && (
-              <span>관측소까지 {state.station_info.distance_km.toFixed(1)}km</span>
+            <span>좌표 {resolvedState.location.latitude.toFixed(4)}, {resolvedState.location.longitude.toFixed(4)}</span>
+            {resolvedState.station_info?.distance_km !== undefined && (
+              <span>관측소까지 {resolvedState.station_info.distance_km.toFixed(1)}km</span>
             )}
           </div>
         </section>
@@ -125,19 +134,19 @@ export const SafetyGuide = () => {
           <div className={styles.infoCard}>
             <h2 className={styles.cardTitle}>경고</h2>
             <ul className={styles.list}>
-              {(state.warnings || []).map((warning, index) => (
+              {(resolvedState.warnings || []).map((warning, index) => (
                 <li key={`warning-${index}`}>{warning}</li>
               ))}
-              {!state.warnings?.length && <li>현재 등록된 경고가 없습니다.</li>}
+              {!resolvedState.warnings?.length && <li>현재 등록된 경고가 없습니다.</li>}
             </ul>
           </div>
           <div className={styles.infoCard}>
             <h2 className={styles.cardTitle}>권고 사항</h2>
             <ul className={styles.list}>
-              {(state.recommendations || []).map((recommendation, index) => (
+              {(resolvedState.recommendations || []).map((recommendation, index) => (
                 <li key={`recommend-${index}`}>{recommendation}</li>
               ))}
-              {!state.recommendations?.length && <li>현재 권고 사항이 없습니다.</li>}
+              {!resolvedState.recommendations?.length && <li>현재 권고 사항이 없습니다.</li>}
             </ul>
           </div>
         </section>
@@ -150,8 +159,8 @@ export const SafetyGuide = () => {
                 {tideLatest ? `최신 ${tideLatest.level} · ${tideLatest.time}` : '데이터 없음'}
               </p>
             </div>
-            {state.station_info?.obs_name && (
-              <span className={styles.stationTag}>{state.station_info.obs_name}</span>
+            {resolvedState.station_info?.obs_name && (
+              <span className={styles.stationTag}>{resolvedState.station_info.obs_name}</span>
             )}
           </div>
           {tidePreview.length > 0 ? (
@@ -166,10 +175,10 @@ export const SafetyGuide = () => {
         <section className={styles.infoCard}>
           <h2 className={styles.cardTitle}>긴급 연락처</h2>
           <div className={styles.contactList}>
-            {(state.emergency_contacts || []).map((contact, index) => (
+            {(resolvedState.emergency_contacts || []).map((contact, index) => (
               <span key={`contact-${index}`} className={styles.contactChip}>{contact}</span>
             ))}
-            {!state.emergency_contacts?.length && (
+            {!resolvedState.emergency_contacts?.length && (
               <span className={styles.contactChip}>등록된 연락처가 없습니다.</span>
             )}
           </div>

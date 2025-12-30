@@ -12,8 +12,8 @@ export const TrainingWeb = () => {
   const user = getCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/login');
   };
 
@@ -42,7 +42,8 @@ export const TrainingWeb = () => {
 
       const response = await fetchSafetyGuide(request);
       if (response.success) {
-        navigate('/safety-guide', { state: response.data });
+        sessionStorage.setItem('safetyGuideData', JSON.stringify(response.data));
+        navigate('/safety-guide');
       } else {
         console.error('Failed to fetch safety guide:', response.error);
         alert('안전 가이드 정보를 불러오는데 실패했습니다.');

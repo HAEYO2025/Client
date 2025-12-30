@@ -1,123 +1,127 @@
 .container {
   width: 100%;
   min-height: 100vh;
-  background: #f9fafb;
+  background: #f2f8ff;
+  --ink: #0b1f2a;
+  --ink-soft: #2c4654;
+  --sea: #0a7a7e;
+  --sea-deep: #0b5b63;
+  --card: #ffffff;
+  --line: rgba(10, 122, 126, 0.18);
+  --shadow: rgba(12, 26, 40, 0.18);
 }
 
-/* Header */
 .header {
-  width: 100%;
-  height: 80px;
+  height: 56px;
   background: white;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e5e5;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  padding: 0 28px;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .backBtn {
   width: 40px;
   height: 40px;
+  background: transparent;
   border: none;
-  background: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: background 0.2s;
+  padding: 0;
 }
 
 .backBtn:hover {
-  background: #f3f4f6;
+  opacity: 0.7;
 }
 
 .title {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 18px;
+  color: #171717;
   margin: 0;
-  color: #111827;
+  letter-spacing: -0.5px;
 }
 
-.spacer {
-  width: 40px;
-}
-
-/* Main Content */
 .main {
-  max-width: 1200px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 40px 32px;
+  padding: 32px 28px 60px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(10, 122, 126, 0.12), transparent 40%),
+    radial-gradient(circle at 88% 20%, rgba(14, 130, 158, 0.2), transparent 45%),
+    linear-gradient(180deg, #d8f2f2 0%, #ecf9ff 55%, #ffffff 100%);
 }
 
-/* Risk Card */
 .riskCard {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px 28px;
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 28px -22px var(--shadow);
 }
 
 .riskHeader {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .riskBadge {
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 999px;
-  color: white;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .riskScore {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  color: #6b7280;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  color: var(--sea-deep);
 }
 
 .summary {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 18px;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-size: 15px;
   line-height: 1.6;
-  color: #374151;
+  color: var(--ink);
+  font-weight: 600;
   margin: 0;
 }
 
-/* Info Grid */
 .infoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
 }
 
 .infoCard {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 24px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 16px 28px -22px var(--shadow);
 }
 
 .infoTitle {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 18px;
-  margin: 0 0 16px 0;
-  color: #111827;
+  font-size: 15px;
+  margin: 0 0 12px 0;
+  color: var(--ink);
 }
 
 .infoContent {
@@ -127,147 +131,168 @@
 }
 
 .infoContent p {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', sans-serif;
   font-size: 14px;
-  color: #6b7280;
+  font-weight: 600;
+  color: var(--ink);
   margin: 0;
+  line-height: 1.6;
 }
 
-/* Section */
 .section {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 16px 28px -22px var(--shadow);
 }
 
 .sectionTitle {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 20px;
-  margin: 0 0 20px 0;
-  color: #111827;
+  font-size: 15px;
+  margin: 0 0 14px 0;
+  color: var(--ink);
 }
 
-/* Warning List */
 .warningList {
-  list-style: none;
-  padding: 0;
+  list-style: disc;
+  padding-left: 20px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .warningItem {
-  padding: 16px;
-  background: #fef2f2;
-  border-left: 4px solid #ef4444;
-  border-radius: 8px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  color: #991b1b;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.6;
 }
 
-/* Recommendation List */
 .recommendationList {
-  list-style: none;
-  padding: 0;
+  list-style: disc;
+  padding-left: 20px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .recommendationItem {
-  padding: 16px;
-  background: #f0fdf4;
-  border-left: 4px solid #22c55e;
-  border-radius: 8px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-size: 16px;
-  color: #166534;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.6;
 }
 
-/* Contact Grid */
 .contactGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .contactButton {
-  padding: 16px 24px;
-  background: #0a7a7e;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 13px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .contactButton:hover {
-  background: #075a5d;
+  border-color: var(--sea);
+  background: rgba(10, 122, 126, 0.08);
 }
 
-/* Chart */
 .chartContainer {
   width: 100%;
 }
 
 .chart {
   width: 100%;
-  height: 300px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  height: 140px;
+}
+
+.chartPath {
+  fill: none;
+  stroke: #11819b;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .chartLegend {
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  margin-top: 10px;
+  font-family: 'Pretendard Variable', sans-serif;
   font-size: 12px;
-  color: #6b7280;
+  font-weight: 600;
+  color: var(--ink-soft);
 }
 
-/* Error Message */
 .errorMessage {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  gap: 24px;
+  gap: 20px;
 }
 
 .errorMessage h2 {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard Variable', sans-serif;
   font-weight: 700;
-  font-size: 24px;
-  color: #111827;
+  font-size: 18px;
+  color: var(--ink);
 }
 
 .backButton {
   padding: 12px 24px;
-  background: #0a7a7e;
+  background: var(--sea);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
+  border-radius: 999px;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 14px 24px -18px rgba(10, 122, 126, 0.6);
 }
 
 .backButton:hover {
-  background: #075a5d;
+  transform: translateY(-1px);
+  box-shadow: 0 18px 32px -14px rgba(10, 122, 126, 0.7);
+}
+
+.riskCritical {
+  background: rgba(208, 38, 58, 0.12);
+  color: #a31624;
+}
+
+.riskWarning {
+  background: rgba(210, 122, 46, 0.16);
+  color: #8a4b14;
+}
+
+.riskModerate {
+  background: rgba(11, 106, 140, 0.14);
+  color: #0a5a72;
+}
+
+.riskSafe {
+  background: rgba(10, 122, 126, 0.12);
+  color: #0b5b63;
 }

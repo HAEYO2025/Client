@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { ScenarioFeedback, ScenarioSaveHistoryEntry, ScenarioSurvivalRate } from '../../api/scenarios';
 import type { Report } from '../../types/report';
 import { saveScenario } from '../../api/scenarios';
-import styles from './ScenarioFeedback.module.css';
+import styles from './ScenarioFeedbackWeb.module.css';
 
 interface FeedbackEntry {
   situation: string;
@@ -13,13 +13,12 @@ interface FeedbackEntry {
 
 interface FeedbackLocationState {
   scenarioTitle: string;
-  scenarioDescription?: string;
-  startDate?: string;
-  report?: Report | null;
-  history?: ScenarioSaveHistoryEntry[];
+  scenarioDescription: string;
+  startDate: string;
+  report: Report | null;
+  history: ScenarioSaveHistoryEntry[];
   feedbackEntries: FeedbackEntry[];
   survivalRate: ScenarioSurvivalRate | null;
-  shouldSave?: boolean;
 }
 
 const evaluationTone = (evaluation: string) => {
@@ -33,7 +32,7 @@ const evaluationTone = (evaluation: string) => {
   return styles.toneCaution;
 };
 
-export const ScenarioFeedback = () => {
+export const ScenarioFeedbackWeb = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as FeedbackLocationState | undefined;
@@ -46,15 +45,15 @@ export const ScenarioFeedback = () => {
 
   useEffect(() => {
     const save = async () => {
-      if (!state?.report || state.shouldSave === false) {
+      if (!state?.report) {
         return;
       }
       try {
         await saveScenario({
           scenario: {
             title: state.scenarioTitle,
-            description: state.scenarioDescription || '',
-            start_date: state.startDate || '',
+            description: state.scenarioDescription,
+            start_date: state.startDate,
           },
           report: {
             title: state.report.content.substring(0, 50),
@@ -67,7 +66,7 @@ export const ScenarioFeedback = () => {
               .toISOString()
               .slice(0, 10),
           },
-          history: state.history || [],
+          history: state.history,
         });
       } catch (error) {
         console.error('Failed to save scenario:', error);
@@ -81,9 +80,6 @@ export const ScenarioFeedback = () => {
     return null;
   }
 
-  const historyEntries = state.history || [];
-  const hasFeedback = state.feedbackEntries.length > 0;
-
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -96,36 +92,48 @@ export const ScenarioFeedback = () => {
       </header>
 
       <main className={styles.main}>
-        {state.survivalRate && (
-          <section className={styles.rateCard}>
-            <span className={styles.rateLabel}>생존율</span>
-            <div className={styles.rateValue}>
-              <span>{state.survivalRate.survival_rate}%</span>
-              {state.survivalRate.change && (
-                <em className={styles.rateChange}>{state.survivalRate.change}</em>
-              )}
-            </div>
-          </section>
-        )}
+        <div className={styles.contentWrapper}>
+          {state.survivalRate && (
+            <section className={styles.rateCard}>
+              <div className={styles.rateContent}>
+                <span className={styles.rateLabel}>생존율</span>
+                <div className={styles.rateValue}>
+                  <span>{state.survivalRate.survival_rate}%</span>
+                  {state.survivalRate.change && (
+                    <em className={styles.rateChange}>{state.survivalRate.change}</em>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
 
-        <section className={styles.feedbackList}>
-          {!hasFeedback && historyEntries.length === 0 && null}
-          {hasFeedback &&
-            state.feedbackEntries.map((entry, index) => (
+          <section className={styles.feedbackList}>
+            {state.feedbackEntries.length === 0 && (
+              <p className={styles.emptyState}>피드백이 아직 없습니다.</p>
+            )}
+            {state.feedbackEntries.map((entry, index) => (
               <article key={`${entry.choice}-${index}`} className={styles.feedbackCard}>
-                <span className={styles.turnLabel}>턴 {index + 1}</span>
+                <div className={styles.cardHeader}>
+                  <span className={styles.turnLabel}>턴 {index + 1}</span>
+                  <span className={`${styles.evaluationTag} ${evaluationTone(entry.feedback.evaluation)}`}>
+                    {entry.feedback.evaluation || '주의'}
+                  </span>
+                </div>
+                
                 <h2 className={styles.situation}>{entry.situation}</h2>
+                
                 <div className={styles.choiceRow}>
                   <span className={styles.choiceLabel}>선택</span>
                   <span className={styles.choiceText}>{entry.choice}</span>
                 </div>
-                <div className={styles.evaluationRow}>
-                  <span className={`${styles.evaluationTag} ${evaluationTone(entry.feedback.evaluation)}`}>
-                    {entry.feedback.evaluation || '주의'}
-                  </span>
+
+                <div className={styles.impactRow}>
+                  <span className={styles.impactLabel}>영향도</span>
                   <span className={styles.impactText}>{entry.feedback.survival_impact}</span>
                 </div>
+
                 <p className={styles.comment}>{entry.feedback.comment}</p>
+
                 {entry.feedback.better_choice && (
                   <div className={styles.betterChoice}>
                     <span className={styles.betterLabel}>대안</span>
@@ -134,32 +142,15 @@ export const ScenarioFeedback = () => {
                 )}
               </article>
             ))}
-          {!hasFeedback &&
-            historyEntries.map((entry, index) => (
-              <article key={`${entry.choice}-${index}`} className={styles.feedbackCard}>
-                <span className={styles.turnLabel}>턴 {index + 1}</span>
-                <h2 className={styles.situation}>{entry.situation}</h2>
-                <div className={styles.choiceRow}>
-                  <span className={styles.choiceLabel}>선택</span>
-                  <span className={styles.choiceText}>{entry.choice}</span>
-                </div>
-                <div className={styles.evaluationRow}>
-                  <span className={styles.historyTag}>{entry.comment ? '피드백' : '히스토리'}</span>
-                  <span className={styles.impactText}>
-                    생존율 {Math.round(entry.survival_rate * 100)}%
-                  </span>
-                </div>
-                {entry.comment && <p className={styles.comment}>{entry.comment}</p>}
-              </article>
-            ))}
-        </section>
-      </main>
+          </section>
 
-      <div className={styles.bottomBar}>
-        <button className={styles.homeBtn} onClick={() => navigate('/home')}>
-          홈으로
-        </button>
-      </div>
+          <div className={styles.bottomActions}>
+            <button className={styles.homeBtn} onClick={() => navigate('/home')}>
+              홈으로
+            </button>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
