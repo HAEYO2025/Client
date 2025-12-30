@@ -56,7 +56,6 @@ export const getPostById = async (id: number | string): Promise<Post> => {
 };
 
 export const getPostsByBounds = async (_bounds: unknown): Promise<Post[]> => {
-  // In a real implementation, we would pass bounds to the API.
   const response = await fetch(`${API_BASE_URL}/api/posts`, {
     headers: getHeaders()
   });
