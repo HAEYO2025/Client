@@ -147,7 +147,42 @@ export const getAuthHeaders = (): Record<string, string> => {
   if (!token) {
     return {};
   }
-  return { Authorization: token };
+  const normalized = token.replace(/^Bearer\s+/i, '').trim();
+  return { Authorization: `Bearer ${normalized}` };
+};
+
+export const fetchWithAuth = async (
+  input: RequestInfo | URL,
+  init: RequestInit = {},
+): Promise<Response> => {
+  const withAuth = {
+    ...init,
+    headers: {
+      ...(init.headers || {}),
+      ...getAuthHeaders(),
+    },
+    credentials: 'include' as RequestCredentials,
+  };
+
+  const response = await fetch(input, withAuth);
+  if (response.status !== 401) {
+    return response;
+  }
+
+  const refreshed = await refreshAccessToken();
+  if (!refreshed) {
+    return response;
+  }
+
+  const retry = {
+    ...withAuth,
+    headers: {
+      ...(init.headers || {}),
+      ...getAuthHeaders(),
+    },
+  };
+
+  return fetch(input, retry);
 };
 
 /**

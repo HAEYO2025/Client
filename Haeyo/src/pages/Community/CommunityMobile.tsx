@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import type { Post } from '../../types/post';
 import { getPosts } from '../../api/posts';
 import { BottomNavigation } from '../../components/BottomNavigation';
+import { FloatingActionButton } from '../../components/FloatingActionButton';
 import styles from './CommunityMobile.module.css';
 
 export const CommunityMobile = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPost, setNewPost] = useState('');
-  const [isFabOpen, setIsFabOpen] = useState(false);
   
   // 제보 클릭 핸들러 추가
   const handleReportClick = (reportId: number) => {
@@ -137,41 +137,7 @@ export const CommunityMobile = () => {
         </section>
       </main>
 
-      {/* FAB Wrapper */}
-      <div className={styles.fabWrapper}>
-        {isFabOpen && (
-          <div className={styles.fabMenu}>
-            <button className={styles.fabItem} onClick={() => navigate('/scenario/create')}>
-              <div className={styles.fabItemCircle}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#404040">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-              <span className={styles.fabItemLabel}>시나리오</span>
-            </button>
-            <button className={styles.fabItem} onClick={() => {
-              setIsFabOpen(false);
-              navigate('/reportform');
-            }}>
-              <div className={styles.fabItemCircle}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#404040">
-                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-                </svg>
-              </div>
-              <span className={styles.fabItemLabel}>제보하기</span>
-            </button>
-          </div>
-        )}
-        <button 
-          className={`${styles.fab} ${isFabOpen ? styles.active : ''}`}
-          onClick={() => setIsFabOpen(!isFabOpen)}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-      </div>
+      <FloatingActionButton />
 
       {/* Mobile Bottom Navigation */}
       <BottomNavigation activePage="community" />

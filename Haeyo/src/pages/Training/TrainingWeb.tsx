@@ -5,6 +5,7 @@ import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import { WebHeader } from '../../components/WebHeader';
 import aiFilesIcon from '../../assets/ai-files.png';
 import secureShieldIcon from '../../assets/secure-shield.png';
+import { FloatingActionButton } from '../../components/FloatingActionButton';
 import styles from './TrainingWeb.module.css';
 
 export const TrainingWeb = () => {
@@ -74,12 +75,7 @@ export const TrainingWeb = () => {
         </div>
       </main>
 
-      {/* Floating Action Button */}
-      <button className={styles.fab}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M12 5V19M5 12H19" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
-      </button>
+      <FloatingActionButton />
 
       {isLoading && (
         <div className={styles.loadingOverlay} role="status" aria-live="polite">

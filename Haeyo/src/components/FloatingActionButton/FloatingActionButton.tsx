@@ -27,7 +27,10 @@ export const FloatingActionButton = () => {
             </button>
             <button 
               className={styles.fabMenuItem}
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => {
+                setIsMenuOpen(false);
+                navigate('/reportform');
+              }}
               title="제보하기"
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

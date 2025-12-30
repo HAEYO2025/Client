@@ -153,93 +153,12 @@
   padding: 0;
 }
 
-/* FAB Menu */
-.fabWrapper {
-  position: fixed;
-  bottom: 86px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  z-index: 90;
-}
-
-.fabMenu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  background: white;
-  border-radius: 40px;
-  padding: 12px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
-  margin-bottom: 4px;
-  border: 1px solid #e5e5e5;
-  animation: slideUpFab 0.3s ease-out;
-}
-
-@keyframes slideUpFab {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fabItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-}
-
-.fabItemCircle {
-  width: 44px;
-  height: 44px;
-  background: #f5f5f5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.fabItemLabel {
-  font-size: 11px;
-  font-weight: bold;
-  color: #444;
-}
-
-.fab {
-  width: 56px;
-  height: 56px;
-  border-radius: 28px;
-  background-color: #00AEF0;
-  color: white;
-  border: none;
-  font-size: 32px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
 .postCard {
   transition: background-color 0.2s;
 }
 
 .postCard:active {
   background-color: #f5f5f5;
-}
-.fab svg {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.fab.active svg {
-  transform: rotate(45deg);
 }
 
 .bottomNav {

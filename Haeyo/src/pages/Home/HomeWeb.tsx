@@ -231,6 +231,8 @@ export const HomeWeb = () => {
             )}
           </div>
 
+          {/* 안전 안내 컴포넌트 비활성화 */}
+          {/* 
           <div className={styles.announcementBox}>
             <div className={styles.announcementIcon}>📢</div>
             <div className={styles.announcementContent}>
@@ -239,6 +241,7 @@ export const HomeWeb = () => {
               <button className={styles.detailBtn}>자세히 보기</button>
             </div>
           </div>
+          */}
         </aside>
 
         {/* Map Area */}
@@ -326,6 +329,16 @@ export const HomeWeb = () => {
           </div>
         </main>
       </div>
+
+      {/* Loading Overlay */}
+      {isGuideLoading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.loadingCard}>
+            <div className={styles.loadingSpinner} />
+            <p className={styles.loadingText}>맞춤형 안전 가이드 생성 중...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

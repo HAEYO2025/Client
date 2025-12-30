@@ -1,20 +1,12 @@
 import type { Post, CreatePostRequest, PostCategory } from '../types/post';
+import { fetchWithAuth, getAuthHeaders } from './auth';
 
 const API_BASE_URL = '';
 
 const getHeaders = () => {
-  const token = localStorage.getItem('authToken');
-  const userId = localStorage.getItem('userId') || '';
-  
-  if (!token) {
-    console.warn('No authToken found in localStorage');
-  } else {
-    console.log('Token found, length:', token.length);
-  }
-
   return {
     'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...getAuthHeaders(),
   };
 };
 
@@ -25,7 +17,7 @@ export const createPost = async (data: CreatePostRequest): Promise<Post> => {
   }
 
   console.log('Attempting to create post with data:', JSON.stringify(data));
-  const response = await fetch(`${API_BASE_URL}/api/posts`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts`, {
     method: 'POST',
     headers: getHeaders(),
     body: JSON.stringify(data),
@@ -49,7 +41,7 @@ export const createPost = async (data: CreatePostRequest): Promise<Post> => {
 };
 
 export const getPosts = async (): Promise<Post[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts`, {
     method: 'GET',
     headers: getHeaders(),
   });
@@ -63,7 +55,7 @@ export const getPosts = async (): Promise<Post[]> => {
 };
 
 export const getPostById = async (id: number | string): Promise<Post> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/${id}`, {
     method: 'GET',
     headers: getHeaders(),
   });
@@ -77,7 +69,7 @@ export const getPostById = async (id: number | string): Promise<Post> => {
 };
 
 export const getPostsByBounds = async (_bounds: unknown): Promise<Post[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts`, {
     headers: getHeaders()
   });
 
@@ -90,7 +82,7 @@ export const getPostsByBounds = async (_bounds: unknown): Promise<Post[]> => {
 };
 
 export const getPostsByCategory = async (category: PostCategory): Promise<Post[]> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts/category/${category}`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/category/${category}`, {
     method: 'GET',
     headers: getHeaders(),
   });
@@ -104,7 +96,7 @@ export const getPostsByCategory = async (category: PostCategory): Promise<Post[]
 };
 
 export const toggleResolvePost = async (id: number | string): Promise<Post> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts/${id}/resolve`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/${id}/resolve`, {
     method: 'PATCH',
     headers: getHeaders(),
   });
@@ -118,7 +110,7 @@ export const toggleResolvePost = async (id: number | string): Promise<Post> => {
 };
 
 export const deletePost = async (id: number | string): Promise<{ message: string }> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts/${id}`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/${id}`, {
     method: 'DELETE',
     headers: getHeaders(),
   });
@@ -132,7 +124,7 @@ export const deletePost = async (id: number | string): Promise<{ message: string
 };
 
 export const checkAuth = async (): Promise<{ authenticated: boolean; username?: string }> => {
-  const response = await fetch(`${API_BASE_URL}/api/posts/check-auth`, {
+  const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/check-auth`, {
     method: 'GET',
     headers: getHeaders(),
   });

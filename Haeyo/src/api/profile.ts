@@ -1,5 +1,5 @@
 import type { ProfileData, UserProfile, UserReport, UserScenario, ApiResponse } from '../types/profile';
-import { getAuthHeaders } from './auth';
+import { fetchWithAuth, getAuthHeaders } from './auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
@@ -172,12 +172,13 @@ export const fetchProfileData = async (): Promise<ApiResponse<ProfileData>> => {
   }
 
   const scenariosResponse = await fetchUserScenarios();
+  const reportsResponse = await fetchUserReports();
 
   return {
     success: true,
     data: {
       profile: userResponse.data,
-      recentReports: [],
+      recentReports: reportsResponse.success ? reportsResponse.data : [],
       recentScenarios: scenariosResponse.success ? scenariosResponse.data : [],
     },
   };
@@ -185,13 +186,11 @@ export const fetchProfileData = async (): Promise<ApiResponse<ProfileData>> => {
 
 export const fetchCurrentUser = async (): Promise<ApiResponse<UserProfile>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/api/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeaders(),
       },
-      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -203,7 +202,7 @@ export const fetchCurrentUser = async (): Promise<ApiResponse<UserProfile>> => {
     };
     const data = payload.data || payload;
     const email = data.email || 'unknown@example.com';
-    const name = data.name || email.split('@')[0] || '사용자';
+    const name = data.username || data.name || '';
 
     return {
       success: true,
@@ -230,23 +229,63 @@ export const fetchCurrentUser = async (): Promise<ApiResponse<UserProfile>> => {
 };
 
 export const fetchUserReports = async (): Promise<ApiResponse<UserReport[]>> => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    const response = await fetchWithAuth(`${API_BASE_URL}/api/posts/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  return {
-    success: true,
-    data: mockReports,
-  };
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const payload = (await response.json()) as {
+      data?: Array<{
+        id: number | string;
+        content?: string;
+        description?: string;
+        address?: string | null;
+        createdAt?: string;
+        updatedAt?: string;
+        latitude?: number;
+        longitude?: number;
+      }>;
+    };
+    const items = payload.data || [];
+    const normalized: UserReport[] = items.map((item) => ({
+      id: `${item.id}`,
+      content: item.content || item.description || '',
+      location: item.address || '위치 정보 없음',
+      createdAt: item.createdAt || item.updatedAt || new Date().toISOString(),
+      stats: {
+        likes: 0,
+        comments: 0,
+      },
+    }));
+
+    return {
+      success: true,
+      data: normalized,
+    };
+  } catch (error) {
+    console.error('Failed to fetch user reports:', error);
+    return {
+      success: false,
+      data: [],
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+    };
+  }
 };
 
 export const fetchUserScenarios = async (): Promise<ApiResponse<UserScenario[]>> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/scenarios/me`, {
+    const response = await fetchWithAuth(`${API_BASE_URL}/api/scenarios/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeaders(),
       },
-      credentials: 'include',
     });
 
     if (!response.ok) {

@@ -78,6 +78,13 @@ export const ScenarioCreate = () => {
     setSelectedReport(report);
   };
 
+  const getReportTitle = (report: Report) => {
+    if (!report.content) {
+      return '제목 없음';
+    }
+    return report.content.length > 30 ? `${report.content.slice(0, 30)}...` : report.content;
+  };
+
   const characterCount = formData.situation.length;
 
   return (
@@ -123,7 +130,7 @@ export const ScenarioCreate = () => {
                   </svg>
                 </div>
                 <div className={styles.reportInfo}>
-                  <p className={styles.reportContent}>{selectedReport.content}</p>
+                  <p className={styles.reportContent}>{getReportTitle(selectedReport)}</p>
                   <p className={styles.reportAuthor}>{selectedReport.author.name}</p>
                 </div>
                 <button 
@@ -197,7 +204,7 @@ export const ScenarioCreate = () => {
             <circle cx="14" cy="14" r="14" fill="white" fillOpacity="0.2"/>
             <path d="M14 8L14 20M8 14L20 14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
           </svg>
-          시나리오에서 생존하기
+          시나리오로 빠져들기
         </button>
       </div>
 

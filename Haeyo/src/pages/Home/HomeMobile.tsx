@@ -7,6 +7,7 @@ import { isAuthenticated, getCurrentUser, logout } from '../../api/auth';
 import { fetchSafetyGuide } from '../../api/safetyGuide';
 import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import { BottomNavigation } from '../../components/BottomNavigation';
+import { FloatingActionButton } from '../../components/FloatingActionButton';
 import styles from './HomeMobile.module.css';
 
 interface MapMarker {
@@ -23,7 +24,6 @@ export const HomeMobile = () => {
   const [selectedFilter, setSelectedFilter] = useState('전체');
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
-  const [isFabOpen, setIsFabOpen] = useState(false);
   const [isGuideLoading, setIsGuideLoading] = useState(false);
   
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -366,38 +366,7 @@ export const HomeMobile = () => {
       </nav>
       */}
 
-      {/* Floating Action Button Wrapper */}
-      <div className={styles.fabWrapper}>
-        {isFabOpen && (
-          <div className={styles.fabMenu}>
-            <button className={styles.fabItem} onClick={() => navigate('/scenario/create')}>
-              <div className={styles.fabItemCircle}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#404040">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-              </div>
-              <span className={styles.fabItemLabel}>시나리오</span>
-            </button>
-            <button className={styles.fabItem} onClick={() => navigate('/reportform')}>
-              <div className={styles.fabItemCircle}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="#404040">
-                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-                </svg>
-              </div>
-              <span className={styles.fabItemLabel}>제보하기</span>
-            </button>
-          </div>
-        )}
-        <button 
-          className={`${styles.fab} ${isFabOpen ? styles.active : ''}`}
-          onClick={() => setIsFabOpen(!isFabOpen)}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-      </div>
+      <FloatingActionButton />
     </div>
   );
 };
