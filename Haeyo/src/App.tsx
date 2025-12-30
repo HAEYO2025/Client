@@ -2,8 +2,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { SignUpMobile, SignUpWeb } from './pages/SignUp'
 import { LoginMobile, LoginWeb } from './pages/Login'
 import { HomeMobile, HomeWeb } from './pages/Home'
+import { TrainingMobile } from './pages/Training'
 import { ScenarioCreate } from './pages/ScenarioCreate'
 import { ScenarioResult } from './pages/ScenarioResult'
+import { ScenarioFeedback } from './pages/ScenarioFeedback'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
 import './App.css'
@@ -55,6 +57,22 @@ function App() {
           element={
             <PrivateRoute>
               <ScenarioResult />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/scenario/feedback" 
+          element={
+            <PrivateRoute>
+              <ScenarioFeedback />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/training" 
+          element={
+            <PrivateRoute>
+              <TrainingMobile />
             </PrivateRoute>
           } 
         />

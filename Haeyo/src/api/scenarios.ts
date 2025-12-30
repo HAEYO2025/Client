@@ -13,6 +13,25 @@ export interface ScenarioRequest {
     description: string;
     start_date: string;
   };
+  history: ScenarioHistoryEntry[];
+}
+
+export interface ScenarioHistoryEntry {
+  situation: string;
+  choice: string;
+}
+
+export interface ScenarioFeedback {
+  chosen_action: string;
+  evaluation: string;
+  comment: string;
+  better_choice: string;
+  survival_impact: string;
+}
+
+export interface ScenarioSurvivalRate {
+  survival_rate: number;
+  change: string;
 }
 
 export interface Choice {
@@ -21,10 +40,16 @@ export interface Choice {
 }
 
 export interface ScenarioStreamChunk {
-  type: 'situation' | 'choice' | 'done' | 'error';
+  type: 'situation' | 'choice' | 'feedback' | 'survival_rate' | 'done' | 'error';
   content?: string;
   choices?: Choice[];
   error?: string;
+  feedback?: ScenarioFeedback;
+  survivalRate?: ScenarioSurvivalRate;
+}
+
+export interface ScenarioStreamOptions {
+  history?: ScenarioHistoryEntry[];
 }
 
 const toChoice = (value: unknown, fallbackId: number): Choice | null => {
@@ -79,6 +104,48 @@ const parseChoiceContent = (content: unknown): Choice[] => {
     });
 };
 
+const normalizeFeedback = (value: unknown): ScenarioFeedback | null => {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  const chosenAction = typeof record.chosen_action === 'string' ? record.chosen_action : '';
+  const evaluation = typeof record.evaluation === 'string' ? record.evaluation : '';
+  const comment = typeof record.comment === 'string' ? record.comment : '';
+  const betterChoice = typeof record.better_choice === 'string' ? record.better_choice : '';
+  const survivalImpact = typeof record.survival_impact === 'string' ? record.survival_impact : '';
+
+  if (!chosenAction && !evaluation && !comment && !betterChoice && !survivalImpact) {
+    return null;
+  }
+
+  return {
+    chosen_action: chosenAction,
+    evaluation,
+    comment,
+    better_choice: betterChoice,
+    survival_impact: survivalImpact,
+  };
+};
+
+const normalizeSurvivalRate = (value: unknown): ScenarioSurvivalRate | null => {
+  if (!value || typeof value !== 'object') {
+    return null;
+  }
+  const record = value as Record<string, unknown>;
+  const survivalRate = typeof record.survival_rate === 'number' ? record.survival_rate : Number(record.survival_rate);
+  const change = typeof record.change === 'string' ? record.change : '';
+
+  if (!Number.isFinite(survivalRate)) {
+    return null;
+  }
+
+  return {
+    survival_rate: survivalRate,
+    change,
+  };
+};
+
 /**
  * Create a scenario and receive streaming response
  * Uses Server-Sent Events (SSE) for streaming
@@ -89,6 +156,7 @@ export const createScenarioWithStreaming = async (
   scenarioDescription: string,
   startDate: string,
   onChunk: (chunk: ScenarioStreamChunk) => void,
+  options?: ScenarioStreamOptions,
 ): Promise<void> => {
   const requestBody: ScenarioRequest = {
     report: {
@@ -103,6 +171,7 @@ export const createScenarioWithStreaming = async (
       description: scenarioDescription,
       start_date: startDate,
     },
+    history: options?.history ?? [],
   };
 
   try {
@@ -188,6 +257,26 @@ export const createScenarioWithStreaming = async (
                   type: 'choice',
                   choices: normalizedChoices.length > 0 ? normalizedChoices : contentChoices,
                 });
+              }
+            } else if (eventType === 'feedback') {
+              const feedback = normalizeFeedback(parsed);
+              if (feedback) {
+                onChunk({ type: 'feedback', feedback });
+              }
+            } else if (eventType === 'survival_rate') {
+              const survivalRate = normalizeSurvivalRate(parsed);
+              if (survivalRate) {
+                onChunk({ type: 'survival_rate', survivalRate });
+              }
+            } else if (parsed.chosen_action || parsed.evaluation || parsed.comment || parsed.better_choice) {
+              const feedback = normalizeFeedback(parsed);
+              if (feedback) {
+                onChunk({ type: 'feedback', feedback });
+              }
+            } else if (parsed.survival_rate !== undefined) {
+              const survivalRate = normalizeSurvivalRate(parsed);
+              if (survivalRate) {
+                onChunk({ type: 'survival_rate', survivalRate });
               }
             } else if (parsed.content || parsed.situation) {
               // Fallback: if there's content but no type, treat as situation

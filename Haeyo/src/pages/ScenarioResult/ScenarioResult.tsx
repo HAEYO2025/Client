@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { createScenarioWithStreaming, type Choice } from '../../api/scenarios';
+import {
+  createScenarioWithStreaming,
+  type Choice,
+  type ScenarioFeedback,
+  type ScenarioHistoryEntry,
+  type ScenarioSurvivalRate,
+  type ScenarioStreamChunk,
+} from '../../api/scenarios';
 import type { Report } from '../../types/report';
 import styles from './ScenarioResult.module.css';
 
@@ -11,20 +18,80 @@ interface LocationState {
   startDate: string;
 }
 
+interface ScenarioPage {
+  situation: string;
+  choices: Choice[];
+  selectedChoice?: Choice;
+  feedback?: ScenarioFeedback;
+}
+
 export const ScenarioResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState;
 
-  const [situation, setSituation] = useState('');
-  const [choices, setChoices] = useState<Choice[]>([]);
+  const [pages, setPages] = useState<ScenarioPage[]>([]);
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [isStreaming, setIsStreaming] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showFog, setShowFog] = useState(false);
   const [showChoices, setShowChoices] = useState(true);
   const [customChoiceText, setCustomChoiceText] = useState('');
+  const [survivalRate, setSurvivalRate] = useState<ScenarioSurvivalRate | null>(null);
 
   const situationRef = useRef<HTMLDivElement>(null);
+  const hasAutoNavigated = useRef(false);
+
+  const getStreamHandler = (pageIndex: number) => (chunk: ScenarioStreamChunk) => {
+    if (chunk.type === 'situation' && chunk.content) {
+      // Show fog effect only when situation first starts
+      setPages((prev) => {
+        const next = [...prev];
+        const current = next[pageIndex] || { situation: '', choices: [] };
+        if (!current.situation) {
+          setShowFog(true);
+          setTimeout(() => setShowFog(false), 1500);
+        }
+        next[pageIndex] = {
+          ...current,
+          situation: `${current.situation}${chunk.content}`,
+          choices: [],
+        };
+        return next;
+      });
+      setShowChoices(false);
+    } else if (chunk.type === 'choice' && chunk.choices) {
+      setPages((prev) => {
+        const next = [...prev];
+        const current = next[pageIndex] || { situation: '', choices: [] };
+        next[pageIndex] = {
+          ...current,
+          choices: mergeChoices(current.choices, chunk.choices || []),
+        };
+        return next;
+      });
+      setIsStreaming(false);
+      setShowChoices(true);
+    } else if (chunk.type === 'feedback' && chunk.feedback) {
+      setPages((prev) => {
+        const next = [...prev];
+        const targetIndex = Math.max(pageIndex - 1, 0);
+        const current = next[targetIndex];
+        if (!current) {
+          return prev;
+        }
+        next[targetIndex] = { ...current, feedback: chunk.feedback };
+        return next;
+      });
+    } else if (chunk.type === 'survival_rate' && chunk.survivalRate) {
+      setSurvivalRate(chunk.survivalRate);
+    } else if (chunk.type === 'done') {
+      setIsStreaming(false);
+    } else if (chunk.type === 'error') {
+      setError(chunk.error || '오류가 발생했습니다.');
+      setIsStreaming(false);
+    }
+  };
 
   useEffect(() => {
     if (!state?.selectedReport) {
@@ -33,34 +100,16 @@ export const ScenarioResult = () => {
     }
 
     const startStreaming = async () => {
+      setPages([{ situation: '', choices: [] }]);
+      setCurrentPageIndex(0);
+      setSurvivalRate(null);
+      hasAutoNavigated.current = false;
       await createScenarioWithStreaming(
         state.selectedReport,
         state.scenarioTitle,
         state.scenarioDescription,
         state.startDate,
-        (chunk) => {
-          if (chunk.type === 'situation' && chunk.content) {
-            // Show fog effect only when situation first starts
-            setSituation((prev) => {
-              if (!prev) {
-                setShowFog(true);
-                setTimeout(() => setShowFog(false), 1500);
-              }
-              return prev + chunk.content;
-            });
-            setChoices([]); // Clear previous choices
-            setShowChoices(false);
-          } else if (chunk.type === 'choice' && chunk.choices) {
-            setChoices((prev) => mergeChoices(prev, chunk.choices || []));
-            setIsStreaming(false);
-            setShowChoices(true);
-          } else if (chunk.type === 'done') {
-            setIsStreaming(false);
-          } else if (chunk.type === 'error') {
-            setError(chunk.error || '오류가 발생했습니다.');
-            setIsStreaming(false);
-          }
-        }
+        getStreamHandler(0)
       );
     };
 
@@ -72,47 +121,27 @@ export const ScenarioResult = () => {
     if (situationRef.current) {
       situationRef.current.scrollTop = situationRef.current.scrollHeight;
     }
-  }, [situation]);
+  }, [pages, currentPageIndex]);
 
   const handleCancel = () => {
     navigate('/scenario/create');
   };
 
   const handleRetry = () => {
-    setSituation('');
-    setChoices([]);
+    setPages([{ situation: '', choices: [] }]);
+    setCurrentPageIndex(0);
     setError(null);
     setIsStreaming(true);
     setShowFog(false);
+    setSurvivalRate(null);
+    hasAutoNavigated.current = false;
 
     createScenarioWithStreaming(
       state.selectedReport,
       state.scenarioTitle,
       state.scenarioDescription,
       state.startDate,
-      (chunk) => {
-        if (chunk.type === 'situation' && chunk.content) {
-          // Show fog effect only when situation first starts
-          setSituation((prev) => {
-            if (!prev) {
-              setShowFog(true);
-              setTimeout(() => setShowFog(false), 1500);
-            }
-            return prev + chunk.content;
-          });
-          setChoices([]);
-          setShowChoices(false);
-        } else if (chunk.type === 'choice' && chunk.choices) {
-          setChoices((prev) => mergeChoices(prev, chunk.choices || []));
-          setIsStreaming(false);
-          setShowChoices(true);
-        } else if (chunk.type === 'done') {
-          setIsStreaming(false);
-        } else if (chunk.type === 'error') {
-          setError(chunk.error || '오류가 발생했습니다.');
-          setIsStreaming(false);
-        }
-      }
+      getStreamHandler(0)
     );
   };
 
@@ -152,11 +181,81 @@ export const ScenarioResult = () => {
     return Array.from(merged.values());
   };
 
+  const buildHistory = (
+    items: ScenarioPage[],
+    uptoIndex: number,
+    overrideChoice?: Choice,
+  ): ScenarioHistoryEntry[] => {
+    const history: ScenarioHistoryEntry[] = [];
+    items.slice(0, uptoIndex + 1).forEach((page, index) => {
+      if (!page?.situation) {
+        return;
+      }
+      const selected = index === uptoIndex && overrideChoice ? overrideChoice : page.selectedChoice;
+      if (!selected) {
+        return;
+      }
+      history.push({ situation: page.situation, choice: selected.text });
+    });
+    return history;
+  };
+
+  const buildFeedbackEntries = () =>
+    pages
+      .filter((page) => page.selectedChoice && page.feedback)
+      .map((page) => ({
+        situation: page.situation,
+        choice: page.selectedChoice?.text ?? '',
+        feedback: page.feedback as ScenarioFeedback,
+      }));
+
+  useEffect(() => {
+    const feedbackCount = pages.filter((page) => page.feedback).length;
+    if (feedbackCount >= 10 && !hasAutoNavigated.current) {
+      hasAutoNavigated.current = true;
+      navigate('/scenario/feedback', {
+        state: {
+          scenarioTitle: state?.scenarioTitle ?? '제목',
+          feedbackEntries: buildFeedbackEntries(),
+          survivalRate,
+        },
+      });
+    }
+  }, [pages, navigate, state?.scenarioTitle, survivalRate]);
+
   const handleChoiceSelect = (choice: Choice) => {
-    // TODO: Send selected choice back to API and continue scenario
+    if (currentPageIndex !== pages.length - 1) {
+      return;
+    }
     console.log('Selected choice:', choice);
-    // For now, just mark as complete and navigate
-    alert(`선택: ${choice.text}`);
+    const history = buildHistory(pages, currentPageIndex, choice);
+
+    const nextIndex = pages.length;
+    setPages((prev) => {
+      const next = [...prev];
+      const current = next[currentPageIndex];
+      if (current) {
+        next[currentPageIndex] = { ...current, selectedChoice: choice };
+      }
+      next.push({ situation: '', choices: [] });
+      return next;
+    });
+    setCurrentPageIndex(nextIndex);
+    setError(null);
+    setIsStreaming(true);
+    setShowFog(false);
+    setShowChoices(false);
+
+    createScenarioWithStreaming(
+      state.selectedReport,
+      state.scenarioTitle,
+      state.scenarioDescription,
+      state.startDate,
+      getStreamHandler(nextIndex),
+      {
+        history,
+      }
+    );
   };
 
   const handleCustomChoiceSubmit = () => {
@@ -169,13 +268,35 @@ export const ScenarioResult = () => {
   };
 
   const handleConfirm = () => {
-    // TODO: Save scenario and navigate to scenario detail or home
-    navigate('/');
+    navigate('/scenario/feedback', {
+      state: {
+        scenarioTitle: state?.scenarioTitle ?? '제목',
+        feedbackEntries: buildFeedbackEntries(),
+        survivalRate,
+      },
+    });
   };
 
   const toggleChoices = () => {
     setShowChoices((prev) => !prev);
   };
+
+  const goToPreviousPage = () => {
+    setCurrentPageIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const goToNextPage = () => {
+    setCurrentPageIndex((prev) => Math.min(prev + 1, pages.length - 1));
+  };
+
+  useEffect(() => {
+    const currentChoices = pages[currentPageIndex]?.choices || [];
+    setShowChoices(currentChoices.length > 0);
+  }, [pages, currentPageIndex]);
+
+  const isHistoryView = pages.length > 0 && currentPageIndex !== pages.length - 1;
+  const currentPage = pages[currentPageIndex];
+  const selectedChoice = currentPage?.selectedChoice;
 
   return (
     <div className={styles.container}>
@@ -198,29 +319,61 @@ export const ScenarioResult = () => {
           </div>
         )}
 
+        {pages.length > 0 && (
+          <div className={styles.pageNav}>
+            <button
+              className={styles.pageNavBtn}
+              onClick={goToPreviousPage}
+              disabled={currentPageIndex === 0}
+              type="button"
+            >
+              &lt;
+            </button>
+            <span className={styles.pageNavLabel}>
+              {currentPageIndex + 1} / {pages.length}
+            </span>
+            <button
+              className={styles.pageNavBtn}
+              onClick={goToNextPage}
+              disabled={currentPageIndex === pages.length - 1}
+              type="button"
+            >
+              &gt;
+            </button>
+          </div>
+        )}
+
         {/* Situation Display with Fog Effect */}
-        {situation && (
+        {currentPage?.situation && (
           <div
             ref={situationRef}
             className={`${styles.situationContainer} ${showFog ? styles.foggy : ''} ${!showChoices ? styles.expandedSituation : ''}`}
           >
-            <p className={styles.situationText}>{situation}</p>
+            <p className={styles.situationText}>{currentPage?.situation}</p>
+          </div>
+        )}
+
+        {isHistoryView && selectedChoice && (
+          <div className={styles.selectedChoiceCard}>
+            <span className={styles.selectedChoiceLabel}>선택한 행동</span>
+            <span className={styles.selectedChoiceText}>{selectedChoice.text}</span>
           </div>
         )}
 
         {/* Choice Buttons */}
-        {choices.length > 0 && (
+        {currentPage?.choices.length > 0 && (
           <>
-            <button className={styles.choiceToggle} onClick={toggleChoices}>
+            <button className={styles.choiceToggle} onClick={toggleChoices} type="button">
               {showChoices ? '선택지 접기' : '선택지 보기'}
             </button>
             {showChoices && (
               <div className={styles.choicesContainer}>
-                {choices.map((choice) => (
+                {currentPage?.choices.map((choice) => (
                   <button
                     key={choice.id}
-                    className={styles.choiceBtn}
+                    className={`${styles.choiceBtn} ${selectedChoice?.id === choice.id ? styles.choiceSelected : ''}`}
                     onClick={() => handleChoiceSelect(choice)}
+                    disabled={isHistoryView}
                   >
                     {choice.text}
                   </button>
@@ -228,7 +381,7 @@ export const ScenarioResult = () => {
                 <div className={styles.customChoice}>
                   <input
                     className={styles.customInput}
-                    placeholder="직접 입력하기"
+                    placeholder={isHistoryView ? '최신 페이지에서 입력 가능' : '직접 입력하기'}
                     value={customChoiceText}
                     onChange={(event) => setCustomChoiceText(event.target.value)}
                     onKeyDown={(event) => {
@@ -236,11 +389,13 @@ export const ScenarioResult = () => {
                         handleCustomChoiceSubmit();
                       }
                     }}
+                    disabled={isHistoryView}
                   />
                   <button
                     className={styles.customSubmit}
                     type="button"
                     onClick={handleCustomChoiceSubmit}
+                    disabled={isHistoryView}
                   >
                     전송
                   </button>
@@ -251,7 +406,7 @@ export const ScenarioResult = () => {
         )}
 
         {/* Streaming indicator */}
-        {isStreaming && !situation && (
+        {isStreaming && !pages[currentPageIndex]?.situation && (
           <div className={styles.streamingIndicator}>
             시나리오 생성 중...
           </div>

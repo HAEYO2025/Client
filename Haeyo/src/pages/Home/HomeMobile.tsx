@@ -178,7 +178,7 @@ export const HomeMobile = () => {
           </svg>
           <span>커뮤니티</span>
         </button>
-        <button className={styles.navBtn}>
+        <button className={styles.navBtn} onClick={() => navigate('/training')}>
           <svg width="23" height="18" viewBox="0 0 23 18" fill="none">
             <path d="M18 2H14.82C14.4 0.84 13.3 0 12 0C10.7 0 9.6 0.84 9.18 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2ZM12 2C12.55 2 13 2.45 13 3C13 3.55 12.55 4 12 4C11.45 4 11 3.55 11 3C11 2.45 11.45 2 12 2ZM14 14H7V12H14V14ZM17 10H7V8H17V10ZM17 6H7V4H17V6Z" fill="#737373"/>
           </svg>
