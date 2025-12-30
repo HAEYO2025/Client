@@ -11,7 +11,7 @@ import styles from './LoginMobile.module.css';
 export const LoginMobile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
+    username: '',
     password: '',
   });
   const [error, setError] = useState<string>('');
@@ -57,11 +57,11 @@ export const LoginMobile = () => {
         
         <form className={styles.form} onSubmit={handleSubmit}>
           <Input
-            label="이메일"
-            type="email"
-            value={formData.email}
-            onChange={handleChange('email')}
-            placeholder="이메일을 입력하세요"
+            label="아이디"
+            type="text"
+            value={formData.username}
+            onChange={handleChange('username')}
+            placeholder="아이디를 입력하세요"
             required
           />
           

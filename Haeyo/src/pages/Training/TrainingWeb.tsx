@@ -1,21 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logout, getCurrentUser } from '../../api/auth';
 import { fetchSafetyGuide } from '../../api/safetyGuide';
 import type { SafetyGuideRequest } from '../../types/safetyGuide';
+import { WebHeader } from '../../components/WebHeader';
 import aiFilesIcon from '../../assets/ai-files.png';
 import secureShieldIcon from '../../assets/secure-shield.png';
 import styles from './TrainingWeb.module.css';
 
 export const TrainingWeb = () => {
   const navigate = useNavigate();
-  const user = getCurrentUser();
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
 
   const handleSafetyGuideClick = async () => {
     if (isLoading) {
@@ -59,20 +53,7 @@ export const TrainingWeb = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <span className={styles.logoIcon}>⚓</span>
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <nav className={styles.nav}>
-          <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
-          <button className={styles.navItem}>커뮤니티</button>
-          <button className={`${styles.navItem} ${styles.active}`}>학습</button>
-          <button className={styles.navItem} onClick={() => navigate('/profile')}>프로필</button>
-          <span className={styles.username}>{user?.userId || '???'}님</span>
-          <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-        </nav>
-      </header>
+      <WebHeader activePage="training" />
 
       {/* Main Content */}
       <main className={styles.main}>

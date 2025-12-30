@@ -4,6 +4,9 @@ import type { Post } from '../../types/post';
 import { getPosts } from '../../api/posts';
 import { useKakaoMapLoader } from '../../hooks/useKakaoMapLoader';
 import { isAuthenticated, getCurrentUser, logout } from '../../api/auth';
+import { fetchSafetyGuide } from '../../api/safetyGuide';
+import type { SafetyGuideRequest } from '../../types/safetyGuide';
+import { BottomNavigation } from '../../components/BottomNavigation';
 import styles from './HomeMobile.module.css';
 
 interface MapMarker {
@@ -21,6 +24,7 @@ export const HomeMobile = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
   const [isFabOpen, setIsFabOpen] = useState(false);
+  const [isGuideLoading, setIsGuideLoading] = useState(false);
   
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -327,6 +331,9 @@ export const HomeMobile = () => {
       </div>
 
       {/* Bottom Navigation */}
+      <BottomNavigation activePage="map" />
+
+      {/* 
       <nav className={styles.bottomNav}>
         <button className={`${styles.navBtn} ${styles.active}`}>
           <div className={styles.navIcon}>
@@ -344,19 +351,20 @@ export const HomeMobile = () => {
           </svg>
           <span>커뮤니티</span>
         </button>
-        <button className={styles.navBtn}>
+        <button className={styles.navBtn} onClick={() => navigate('/training')}>
           <svg width="23" height="18" viewBox="0 0 23 18" fill="none">
             <path d="M18 2H14.82C14.4 0.84 13.3 0 12 0C10.7 0 9.6 0.84 9.18 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2ZM12 2C12.55 2 13 2.45 13 3C13 3.55 12.55 4 12 4C11.45 4 11 3.55 11 3C11 2.45 11.45 2 12 2ZM14 14H7V12H14V14ZM17 10H7V8H17V10ZM17 6H7V4H17V6Z" fill="#737373"/>
           </svg>
           <span>학습</span>
         </button>
-        <button className={styles.navBtn}>
+        <button className={styles.navBtn} onClick={() => navigate('/profile')}>
           <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
             <path d="M8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0ZM8 10C5.33 10 0 11.34 0 14V16C0 17.1 0.9 18 2 18H14C15.1 18 16 17.1 16 16V14C16 11.34 10.67 10 8 10Z" fill="#737373"/>
           </svg>
           <span>프로필</span>
         </button>
       </nav>
+      */}
 
       {/* Floating Action Button Wrapper */}
       <div className={styles.fabWrapper}>

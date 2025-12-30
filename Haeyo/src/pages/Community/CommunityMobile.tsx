@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Post } from '../../types/post';
 import { getPosts } from '../../api/posts';
+import { BottomNavigation } from '../../components/BottomNavigation';
 import styles from './CommunityMobile.module.css';
 
 export const CommunityMobile = () => {
@@ -173,6 +174,8 @@ export const CommunityMobile = () => {
       </div>
 
       {/* Mobile Bottom Navigation */}
+      <BottomNavigation activePage="community" />
+      {/* 
       <nav className={styles.bottomNav}>
         <button className={styles.navBtn} onClick={() => navigate('/home')}>
           <div className={styles.navIcon}>
@@ -209,6 +212,7 @@ export const CommunityMobile = () => {
           <span>프로필</span>
         </button>
       </nav>
+      */}
 
       {/* Modal */}
       {isModalOpen && (

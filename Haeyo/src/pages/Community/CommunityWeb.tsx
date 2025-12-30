@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Post } from '../../types/post';
 import { getPosts } from '../../api/posts';
-import { isAuthenticated, getCurrentUser, logout } from '../../api/auth';
+import { WebHeader } from '../../components/WebHeader';
 import styles from './CommunityWeb.module.css';
 
 export const CommunityWeb = () => {
@@ -10,17 +10,6 @@ export const CommunityWeb = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newPost, setNewPost] = useState('');
   const [isFabOpen, setIsFabOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
-  
-  const handleLogout = () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
-      logout();
-      setIsLoggedIn(false);
-      setCurrentUser(null);
-      navigate('/home');
-    }
-  };
 
   // 제보 클릭 핸들러 추가
   const handleReportClick = (reportId: number) => {
@@ -58,29 +47,7 @@ export const CommunityWeb = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo} onClick={() => navigate('/home')} style={{ cursor: 'pointer' }}>
-          <img src="/logo.png" alt="Haeyo Logo" className={styles.anchorIcon} />
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <nav className={styles.navMenu}>
-          <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
-          <button className={`${styles.navItem} ${styles.active}`} onClick={() => navigate('/community')}>커뮤니티</button>
-          <button className={styles.navItem}>학습</button>
-          <button className={styles.navItem}>프로필</button>
-          {isLoggedIn && currentUser ? (
-            <>
-              <span className={styles.userName}>{currentUser.userId}님</span>
-              <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-            </>
-          ) : (
-            <>
-              <button className={styles.navBtn} onClick={() => navigate('/login')}>로그인</button>
-              <button className={styles.navBtn} onClick={() => navigate('/signup')}>회원 가입</button>
-            </>
-          )}
-        </nav>
-      </header>
+      <WebHeader activePage="community" />
 
       {/* Main Content */}
       <div className={styles.content}>

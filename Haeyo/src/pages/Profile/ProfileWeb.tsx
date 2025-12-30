@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchProfileData } from '../../api/profile';
 import { fetchScenarioById } from '../../api/scenarios';
-import { logout, getCurrentUser } from '../../api/auth';
 import type { ProfileData } from '../../types/profile';
+import { WebHeader } from '../../components/WebHeader';
 import styles from './ProfileWeb.module.css';
 
 export const ProfileWeb = () => {
   const navigate = useNavigate();
-  const user = getCurrentUser();
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'reports' | 'scenarios'>('reports');
@@ -72,10 +71,7 @@ export const ProfileWeb = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -97,20 +93,7 @@ export const ProfileWeb = () => {
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.logo}>
-            <span className={styles.logoIcon}>⚓</span>
-            <span className={styles.logoText}>해요</span>
-          </div>
-          <nav className={styles.nav}>
-            <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
-            <button className={styles.navItem}>커뮤니티</button>
-            <button className={styles.navItem} onClick={() => navigate('/training')}>학습</button>
-            <button className={`${styles.navItem} ${styles.active}`}>프로필</button>
-            <span className={styles.username}>{user?.userId || '???'}님</span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-          </nav>
-        </header>
+        <WebHeader activePage="profile" />
         <div className={styles.loadingState}>
           <p>프로필을 불러오는 중...</p>
         </div>
@@ -121,20 +104,7 @@ export const ProfileWeb = () => {
   if (!profileData) {
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.logo}>
-            <span className={styles.logoIcon}>⚓</span>
-            <span className={styles.logoText}>해요</span>
-          </div>
-          <nav className={styles.nav}>
-            <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
-            <button className={styles.navItem}>커뮤니티</button>
-            <button className={styles.navItem} onClick={() => navigate('/training')}>학습</button>
-            <button className={`${styles.navItem} ${styles.active}`}>프로필</button>
-            <span className={styles.username}>{user?.userId || '???'}님</span>
-            <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-          </nav>
-        </header>
+        <WebHeader activePage="profile" />
         <div className={styles.errorState}>
           <p>프로필을 불러올 수 없습니다.</p>
         </div>
@@ -149,20 +119,7 @@ export const ProfileWeb = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <span className={styles.logoIcon}>⚓</span>
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <nav className={styles.nav}>
-          <button className={styles.navItem} onClick={() => navigate('/home')}>지도</button>
-          <button className={styles.navItem}>커뮤니티</button>
-          <button className={styles.navItem} onClick={() => navigate('/training')}>학습</button>
-          <button className={`${styles.navItem} ${styles.active}`}>프로필</button>
-          <span className={styles.username}>{user?.userId || '???'}님</span>
-          <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-        </nav>
-      </header>
+      <WebHeader activePage="profile" />
 
       {/* Main Content */}
       <main className={styles.main}>

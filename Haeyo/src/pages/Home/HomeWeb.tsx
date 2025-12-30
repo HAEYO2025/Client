@@ -3,7 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import type { Post } from '../../types/post';
 import { getPosts } from '../../api/posts';
 import { useKakaoMapLoader } from '../../hooks/useKakaoMapLoader';
-import { isAuthenticated, getCurrentUser, logout } from '../../api/auth';
+import { isAuthenticated } from '../../api/auth';
+import { fetchSafetyGuide } from '../../api/safetyGuide';
+import type { SafetyGuideRequest } from '../../types/safetyGuide';
+import { WebHeader } from '../../components/WebHeader';
 import styles from './HomeWeb.module.css';
 
 declare global {
@@ -25,8 +28,7 @@ export const HomeWeb = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState('전체');
-  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
-  const [currentUser, setCurrentUser] = useState(getCurrentUser());
+  const [isGuideLoading, setIsGuideLoading] = useState(false);
   
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<any>(null);
@@ -34,43 +36,7 @@ export const HomeWeb = () => {
   // 카카오 지도 로더
   const isMapLoaded = useKakaoMapLoader();
 
-  // 로그인 상태 체크 - 페이지 방문/변경 시마다 확인
-  useEffect(() => {
-    const checkAuthStatus = () => {
-      const authStatus = isAuthenticated();
-      const user = getCurrentUser();
-      
-      console.log('Auth status check:', { authStatus, user });
-      
-      setIsLoggedIn(authStatus);
-      setCurrentUser(user);
-    };
 
-    // 초기 체크
-    checkAuthStatus();
-
-    // storage 이벤트 리스너 (다른 탭에서의 변경 감지)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'authToken' || e.key === 'username') {
-        checkAuthStatus();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [location]); // location 변경 시에도 체크
-
-  const handleLogout = () => {
-    if (window.confirm('로그아웃 하시겠습니까?')) {
-      logout();
-      setIsLoggedIn(false);
-      setCurrentUser(null);
-      navigate('/home');
-    }
-  };
 
   const filterOptions = ['전체', '위험', '생물', '쓰레기'];
 
@@ -175,35 +141,49 @@ export const HomeWeb = () => {
     navigate(path);
   };
 
-  console.log('HomeWeb Render:', { isLoggedIn, currentUser });
+  const handleSafetyGuideClick = async () => {
+    if (isGuideLoading) {
+      return;
+    }
+    if (!navigator.geolocation) {
+      alert('위치 정보를 사용할 수 없습니다.');
+      return;
+    }
+
+    try {
+      setIsGuideLoading(true);
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const request: SafetyGuideRequest = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        date: new Date().toISOString().slice(0, 10).replace(/-/g, ''),
+        data_type: 'tideObs',
+        station_data_type: 'ObsServiceObj',
+      };
+
+      const response = await fetchSafetyGuide(request);
+      if (response.success) {
+        sessionStorage.setItem('safetyGuideData', JSON.stringify(response.data));
+        navigate('/safety-guide');
+      } else {
+        console.error('Failed to fetch safety guide:', response.error);
+        alert('안전 가이드 정보를 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to get current position:', error);
+      alert('현재 위치를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+    } finally {
+      setIsGuideLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
       {/* Header */}
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <img src="/logo.png" alt="Haeyo Logo" className={styles.anchorIcon} />
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <nav className={styles.navMenu}>
-          <button className={styles.navItem} style={{fontWeight: 900}} onClick={() => handleNavigation('/home')}>지도</button>
-          <button className={styles.navItem} onClick={() => handleNavigation('/community')}>커뮤니티</button>
-          <button className={styles.navItem}>학습</button>
-          <button className={styles.navItem}>프로필</button>
-          {isLoggedIn && currentUser ? (
-            <>
-              <span className={styles.userName}>{currentUser.username}님</span>
-              <button className={styles.logoutBtn} onClick={handleLogout}>로그아웃</button>
-            </>
-          ) : (
-            <>
-              <button className={styles.navBtn} onClick={() => handleNavigation('/login')}>로그인</button>
-              <button className={styles.navBtn} onClick={() => handleNavigation('/signup')}>회원 가입</button>
-            </>
-          )}
-        </nav>
-      </header>
+      <WebHeader activePage="home" />
 
       <div className={styles.content}>
         {/* Sidebar */}
@@ -337,7 +317,7 @@ export const HomeWeb = () => {
               </svg>
               <span>시나리오 생성</span>
             </button>
-            <button className={styles.footerBtn}>
+            <button className={styles.footerBtn} onClick={handleSafetyGuideClick}>
               <svg width="24" height="24" viewBox="0 0 20 20" fill="none">
                 <path d="M9 5H11V11H9V5ZM10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18ZM9 13H11V15H9V13Z" fill="#525252"/>
               </svg>

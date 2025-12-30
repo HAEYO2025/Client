@@ -57,7 +57,7 @@ export const login = async (data: LoginFormData): Promise<LoginResponse> => {
   }
 
   const token = extractToken(payload);
-  const userId = extractUserId(payload, data.email);
+  const userId = extractUserId(payload, data.username);
 
   if (token) {
     localStorage.setItem('authToken', token);
