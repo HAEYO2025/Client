@@ -99,9 +99,6 @@ export const ProfileMobile = () => {
       <div className={styles.scrollContent}>
         {/* Profile Section */}
         <div className={styles.profileSection}>
-          <div className={styles.avatarContainer}>
-            <div className={styles.avatar}>{profile.avatar || '👤'}</div>
-          </div>
           <h2 className={styles.userName}>{profile.name}</h2>
           <p className={styles.userEmail}>{profile.email}</p>
           
@@ -175,7 +172,22 @@ export const ProfileMobile = () => {
             </div>
             <div className={styles.scenariosList}>
               {recentScenarios.map((scenario) => (
-                <div key={scenario.id} className={styles.scenarioCard}>
+                <div 
+                  key={scenario.id} 
+                  className={styles.scenarioCard}
+                  onClick={() => {
+                    if (scenario.feedbackData) {
+                      navigate('/scenario/feedback', {
+                        state: {
+                          scenarioTitle: scenario.title,
+                          feedbackEntries: scenario.feedbackData.feedbackEntries,
+                          survivalRate: scenario.feedbackData.survivalRate,
+                        },
+                      });
+                    }
+                  }}
+                  style={{ cursor: scenario.feedbackData ? 'pointer' : 'default' }}
+                >
                   <div className={styles.scenarioHeader}>
                     <h4 className={styles.scenarioTitle}>{scenario.title}</h4>
                     <span className={styles.scenarioTime}>{formatDate(scenario.createdAt)}</span>

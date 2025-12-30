@@ -28,6 +28,22 @@ export interface UserScenario {
   createdAt: string;
   survivalRate: number;
   status: 'completed' | 'in_progress';
+  feedbackData?: {
+    feedbackEntries: Array<{
+      situation: string;
+      choice: string;
+      feedback: {
+        evaluation: string;
+        survival_impact: string;
+        comment: string;
+        better_choice?: string;
+      };
+    }>;
+    survivalRate: {
+      survival_rate: number;
+      change?: string;
+    } | null;
+  };
 }
 
 export interface ProfileData {

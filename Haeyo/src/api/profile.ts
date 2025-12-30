@@ -54,6 +54,32 @@ const mockScenarios: UserScenario[] = [
     createdAt: '2024-03-15T16:45:00Z',
     survivalRate: 85,
     status: 'completed',
+    feedbackData: {
+      feedbackEntries: [
+        {
+          situation: '해수욕장에서 해파리를 발견했습니다.',
+          choice: '즉시 물에서 나와 안전요원에게 알린다.',
+          feedback: {
+            evaluation: 'SAFE',
+            survival_impact: '생존율 +15%',
+            comment: '올바른 대처입니다. 해파리를 발견하면 즉시 물에서 나와 주변 사람들에게 알리는 것이 중요합니다.',
+          },
+        },
+        {
+          situation: '해파리에 쏘인 사람을 발견했습니다.',
+          choice: '119에 신고하고 응급처치를 한다.',
+          feedback: {
+            evaluation: 'SAFE',
+            survival_impact: '생존율 +10%',
+            comment: '신속한 대응이 중요합니다. 해파리에 쏘이면 즉시 119에 신고하고 응급처치를 해야 합니다.',
+          },
+        },
+      ],
+      survivalRate: {
+        survival_rate: 85,
+        change: '+25%',
+      },
+    },
   },
   {
     id: 'scenario-2',
@@ -62,6 +88,33 @@ const mockScenarios: UserScenario[] = [
     createdAt: '2024-03-14T11:30:00Z',
     survivalRate: 72,
     status: 'completed',
+    feedbackData: {
+      feedbackEntries: [
+        {
+          situation: '갑자기 날씨가 나빠지고 파도가 높아졌습니다.',
+          choice: '해안 쪽으로 신속히 이동한다.',
+          feedback: {
+            evaluation: 'SAFE',
+            survival_impact: '생존율 +20%',
+            comment: '올바른 판단입니다. 날씨가 나빠지면 즉시 안전한 곳으로 이동해야 합니다.',
+          },
+        },
+        {
+          situation: '파도에 휩쓸릴 위험이 있습니다.',
+          choice: '구명조끼를 착용하고 도움을 요청한다.',
+          feedback: {
+            evaluation: 'CAUTION',
+            survival_impact: '생존율 +5%',
+            comment: '구명조끼는 좋은 선택이지만, 더 빨리 안전한 곳으로 이동했어야 합니다.',
+            better_choice: '파도가 높아지기 전에 미리 해안으로 이동하기',
+          },
+        },
+      ],
+      survivalRate: {
+        survival_rate: 72,
+        change: '+25%',
+      },
+    },
   },
   {
     id: 'scenario-3',
@@ -70,6 +123,33 @@ const mockScenarios: UserScenario[] = [
     createdAt: '2024-03-12T15:20:00Z',
     survivalRate: 68,
     status: 'completed',
+    feedbackData: {
+      feedbackEntries: [
+        {
+          situation: '보트가 고장나서 표류하고 있습니다.',
+          choice: '신호탄을 쏘고 구조 신호를 보낸다.',
+          feedback: {
+            evaluation: 'SAFE',
+            survival_impact: '생존율 +15%',
+            comment: '신속한 구조 요청이 생존의 핵심입니다.',
+          },
+        },
+        {
+          situation: '물과 식량이 부족합니다.',
+          choice: '물과 식량을 아껴 사용한다.',
+          feedback: {
+            evaluation: 'DANGER',
+            survival_impact: '생존율 -10%',
+            comment: '비상식량을 미리 준비했어야 합니다.',
+            better_choice: '출발 전 충분한 비상식량과 물 준비하기',
+          },
+        },
+      ],
+      survivalRate: {
+        survival_rate: 68,
+        change: '+5%',
+      },
+    },
   },
 ];
 

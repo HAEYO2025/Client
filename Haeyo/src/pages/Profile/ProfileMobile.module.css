@@ -54,28 +54,12 @@
 
 /* Profile Section */
 .profileSection {
-  padding: 32px 16px;
+  padding: 24px 16px;
   background: white;
   border-bottom: 1px solid #e5e5e5;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.avatarContainer {
-  margin-bottom: 16px;
-}
-
-.avatar {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: #f5f5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  border: 2px solid #e5e5e5;
 }
 
 .userName {
@@ -266,6 +250,11 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: background 0.2s;
+}
+
+.scenarioCard:hover {
+  background: #f0f0f0;
 }
 
 .scenarioHeader {
