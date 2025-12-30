@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
@@ -7,6 +8,7 @@ import type { SignUpFormData } from '../../types/auth';
 import styles from './SignUpMobile.module.css';
 
 export const SignUpMobile = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<SignUpFormData>({
     email: '',
     username: '',
@@ -29,8 +31,7 @@ export const SignUpMobile = () => {
   };
 
   const handleLoginClick = () => {
-    // TODO: Navigate to login page
-    console.log('Navigate to login');
+    navigate('/login');
   };
 
   return (

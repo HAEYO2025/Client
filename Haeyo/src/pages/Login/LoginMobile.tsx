@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
-import type { SignUpFormData } from '../../types/auth';
-import styles from './SignUpWeb.module.css';
+import type { LoginFormData } from '../../types/auth';
+import styles from './LoginMobile.module.css';
 
-export const SignUpWeb = () => {
+export const LoginMobile = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<SignUpFormData>({
-    email: '',
+  const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: '',
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Sign up data:', formData);
-    // TODO: Implement sign up API call
+    console.log('Login data:', formData);
+    // TODO: Implement login API call
   };
 
-  const handleChange = (field: keyof SignUpFormData) => (
+  const handleChange = (field: keyof LoginFormData) => (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setFormData(prev => ({
@@ -29,21 +29,18 @@ export const SignUpWeb = () => {
     }));
   };
 
+  const handleSignUpClick = () => {
+    navigate('/signup');
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.card}>
-        <h1 className={styles.title}>회원가입</h1>
+      <Header />
+      
+      <main className={styles.main}>
+        <h1 className={styles.title}>로그인</h1>
         
         <form className={styles.form} onSubmit={handleSubmit}>
-          <Input
-            label="이메일"
-            type="email"
-            value={formData.email}
-            onChange={handleChange('email')}
-            placeholder="이메일을 입력하세요"
-            required
-          />
-          
           <Input
             label="아이디"
             type="text"
@@ -63,17 +60,17 @@ export const SignUpWeb = () => {
           />
           
           <div className={styles.actions}>
-            <Button type="submit">가입</Button>
-            <button 
-              type="button"
-              className={styles.link}
-              onClick={() => navigate('/login')}
+            <Button type="submit">로그인</Button>
+            <Button 
+              type="button" 
+              variant="secondary"
+              onClick={handleSignUpClick}
             >
-              로그인하기
-            </button>
+              회원가입하기
+            </Button>
           </div>
         </form>
-      </div>
+      </main>
     </div>
   );
 };

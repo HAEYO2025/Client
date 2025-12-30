@@ -9,3 +9,15 @@ export interface SignUpResponse {
   message?: string;
   userId?: string;
 }
+
+export interface LoginFormData {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message?: string;
+  token?: string;
+  userId?: string;
+}
