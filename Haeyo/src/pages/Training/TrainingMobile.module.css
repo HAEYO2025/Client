@@ -1,0 +1,269 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 375px;
+  margin: 0 auto;
+  background-color: white;
+  position: relative;
+  min-height: 0;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 8px;
+  border-bottom: 1px solid #e5e5e5;
+  background-color: white;
+  height: 61px;
+  position: relative;
+  z-index: 10;
+}
+
+.menuBtn,
+.notificationBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menuBtn img {
+  width: 18px;
+  height: 20px;
+}
+
+.notificationBtn img {
+  width: 16px;
+  height: 18px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logoText {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  color: #171717;
+}
+
+/* Scrollable Content */
+.scrollContent {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Cards Section */
+.cardsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 51px;
+  padding: 29px 54px;
+}
+
+.card {
+  border: 1px solid black;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 268px;
+  height: 433px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:nth-child(2) {
+  height: 465px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card:active {
+  transform: translateY(0);
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 117px;
+}
+
+.card:nth-child(2) .cardIcon {
+  margin-bottom: 107px;
+}
+
+.iconImage {
+  width: 106px;
+  height: 106px;
+  object-fit: contain;
+}
+
+.card:nth-child(2) .iconImage {
+  width: 118px;
+  height: 118px;
+}
+
+.logoIcon {
+  width: 20px;
+  height: 18px;
+}
+
+.cardTitle {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: normal;
+  letter-spacing: -0.5px;
+  color: black;
+  text-align: center;
+  margin: 0;
+}
+
+/* Bottom Navigation */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: white;
+  border-top: 1px solid #e5e5e5;
+  padding: 8px 16px;
+  height: 71px;
+  z-index: 10;
+}
+
+.navBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  min-width: 47px;
+}
+
+.navBtn span {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.5px;
+  color: #737373;
+  text-align: center;
+}
+
+.navBtn.active span {
+  color: #010101;
+}
+
+.navBtn svg path {
+  transition: fill 0.2s;
+}
+
+/* Floating Action Button */
+.fab {
+  position: fixed;
+  bottom: 85px;
+  right: 17px;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  background-color: #171717;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1), 0px 10px 15px 0px rgba(0, 0, 0, 0.1);
+  z-index: 9;
+  transition: transform 0.2s;
+}
+
+.fab:hover {
+  transform: scale(1.05);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab img {
+  width: 18px;
+  height: 20px;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+.loadingCard {
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.loadingSpinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid #d4d4d4;
+  border-top-color: #0a7a7e;
+  animation: spin 0.8s linear infinite;
+}
+
+.loadingText {
+  margin: 0;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #171717;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

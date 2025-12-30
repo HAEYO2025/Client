@@ -2,12 +2,21 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Report } from '../../types/report';
 import { fetchRecentReports } from '../../api/reports';
+import { fetchSafetyGuide } from '../../api/safetyGuide';
+import type { SafetyGuideRequest } from '../../types/safetyGuide';
+import { BottomNavigation } from '../../components/BottomNavigation';
+import { FloatingActionButton } from '../../components/FloatingActionButton';
+import { Header } from '../../components/Header';
+import menuIcon from '../../assets/menu-icon.svg';
+import logoIcon from '../../assets/logo-icon.svg';
+import notificationIcon from '../../assets/notification-icon.svg';
 import styles from './HomeMobile.module.css';
 
 export const HomeMobile = () => {
   const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGuideLoading, setIsGuideLoading] = useState(false);
 
   useEffect(() => {
     const loadReports = async () => {
@@ -27,27 +36,54 @@ export const HomeMobile = () => {
     loadReports();
   }, []);
 
+  const handleSafetyGuideClick = async () => {
+    if (isGuideLoading) {
+      return;
+    }
+    if (!navigator.geolocation) {
+      alert('위치 정보를 사용할 수 없습니다.');
+      return;
+    }
+
+    try {
+      setIsGuideLoading(true);
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+
+      const request: SafetyGuideRequest = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        date: new Date().toISOString().slice(0, 10).replace(/-/g, ''),
+        data_type: 'tideObs',
+        station_data_type: 'ObsServiceObj',
+      };
+
+      const response = await fetchSafetyGuide(request);
+      if (response.success) {
+        sessionStorage.setItem('safetyGuideData', JSON.stringify(response.data));
+        navigate('/safety-guide');
+      } else {
+        console.error('Failed to fetch safety guide:', response.error);
+        alert('안전 가이드 정보를 불러오는데 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('Failed to get current position:', error);
+      alert('현재 위치를 가져올 수 없습니다. 위치 권한을 확인해주세요.');
+    } finally {
+      setIsGuideLoading(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       {/* Header */}
-      <header className={styles.header}>
-        <button className={styles.menuBtn}>
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
-            <path d="M0 0H18V2H0V0ZM0 5H18V7H0V5ZM0 10H18V12H0V10Z" fill="#171717"/>
-          </svg>
-        </button>
-        <div className={styles.logo}>
-          <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
-            <path d="M10 0L12 6H18L13 10L15 16L10 12L5 16L7 10L2 6H8L10 0Z" fill="#171717"/>
-          </svg>
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <button className={styles.notificationBtn}>
-          <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
-            <path d="M8 18C9.1 18 10 17.1 10 16H6C6 17.1 6.9 18 8 18ZM14 12V7.5C14 4.93 12.37 2.77 10 2.21V1.5C10 0.67 9.33 0 8.5 0C7.67 0 7 0.67 7 1.5V2.21C4.64 2.77 3 4.92 3 7.5V12L1 14V15H16V14L14 12Z" fill="#171717"/>
-          </svg>
-        </button>
-      </header>
+      <Header
+        variant="main"
+        menuIconSrc={menuIcon}
+        logoIconSrc={logoIcon}
+        notificationIconSrc={notificationIcon}
+      />
 
       {/* Scrollable Content */}
       <div className={styles.scrollContent}>
@@ -105,7 +141,7 @@ export const HomeMobile = () => {
               </svg>
               <span>시나리오 생성</span>
             </button>
-            <button className={styles.actionBtn}>
+            <button className={styles.actionBtn} onClick={handleSafetyGuideClick}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M9 5H11V11H9V5ZM10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.59 18 2 14.41 2 10C2 5.59 5.59 2 10 2C14.41 2 18 5.59 18 10C18 14.41 14.41 18 10 18ZM9 13H11V15H9V13Z" fill="#525252"/>
               </svg>
@@ -133,12 +169,8 @@ export const HomeMobile = () => {
             <div className={styles.reportsList}>
               {reports.map((report) => (
                 <div key={report.id} className={styles.reportCard}>
-                  <div className={styles.reportAvatar}>
-                    {report.author.avatar || '👤'}
-                  </div>
                   <div className={styles.reportContent}>
                     <div className={styles.reportHeader}>
-                      <span className={styles.reportName}>{report.author.name}</span>
                       <span className={styles.reportTime}>{report.timeAgo}</span>
                     </div>
                     <p className={styles.reportText}>{report.content}</p>
@@ -165,39 +197,19 @@ export const HomeMobile = () => {
       </div>
 
       {/* Bottom Navigation */}
-      <nav className={styles.bottomNav}>
-        <button className={`${styles.navBtn} ${styles.active}`}>
-          <svg width="20" height="18" viewBox="0 0 20 18" fill="none">
-            <path d="M10 0L12 6H18L13 10L15 16L10 12L5 16L7 10L2 6H8L10 0Z" fill="#171717"/>
-          </svg>
-          <span>지도</span>
-        </button>
-        <button className={styles.navBtn}>
-          <svg width="23" height="18" viewBox="0 0 23 18" fill="none">
-            <path d="M16 9C17.66 9 18.99 7.66 18.99 6C18.99 4.34 17.66 3 16 3C14.34 3 13 4.34 13 6C13 7.66 14.34 9 16 9ZM7 9C8.66 9 9.99 7.66 9.99 6C9.99 4.34 8.66 3 7 3C5.34 3 4 4.34 4 6C4 7.66 5.34 9 7 9ZM7 11C4.67 11 0 12.17 0 14.5V17H14V14.5C14 12.17 9.33 11 7 11ZM16 11C15.71 11 15.38 11.02 15.03 11.05C16.19 11.89 17 13.02 17 14.5V17H23V14.5C23 12.17 18.33 11 16 11Z" fill="#737373"/>
-          </svg>
-          <span>커뮤니티</span>
-        </button>
-        <button className={styles.navBtn}>
-          <svg width="23" height="18" viewBox="0 0 23 18" fill="none">
-            <path d="M18 2H14.82C14.4 0.84 13.3 0 12 0C10.7 0 9.6 0.84 9.18 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2ZM12 2C12.55 2 13 2.45 13 3C13 3.55 12.55 4 12 4C11.45 4 11 3.55 11 3C11 2.45 11.45 2 12 2ZM14 14H7V12H14V14ZM17 10H7V8H17V10ZM17 6H7V4H17V6Z" fill="#737373"/>
-          </svg>
-          <span>학습</span>
-        </button>
-        <button className={styles.navBtn}>
-          <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
-            <path d="M8 0C5.79 0 4 1.79 4 4C4 6.21 5.79 8 8 8C10.21 8 12 6.21 12 4C12 1.79 10.21 0 8 0ZM8 10C5.33 10 0 11.34 0 14V16C0 17.1 0.9 18 2 18H14C15.1 18 16 17.1 16 16V14C16 11.34 10.67 10 8 10Z" fill="#737373"/>
-          </svg>
-          <span>프로필</span>
-        </button>
-      </nav>
+      <BottomNavigation activePage="map" />
 
       {/* Floating Action Button */}
-      <button className={styles.fab}>
-        <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-          <path d="M10 0H8V8H0V10H8V20H10V10H18V8H10V0Z" fill="white"/>
-        </svg>
-      </button>
+      <FloatingActionButton />
+
+      {isGuideLoading && (
+        <div className={styles.loadingOverlay} role="status" aria-live="polite">
+          <div className={styles.loadingCard}>
+            <span className={styles.loadingSpinner} aria-hidden="true" />
+            <p className={styles.loadingText}>맞춤형 안전 가이드 생성 중...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

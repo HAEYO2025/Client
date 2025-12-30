@@ -5,7 +5,6 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
 }
 
 /* Header */
@@ -237,18 +236,6 @@
   gap: 12px;
 }
 
-.reportAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e5e5e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
 .reportContent {
   flex: 1;
   display: flex;
@@ -258,16 +245,8 @@
 
 .reportHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-}
-
-.reportName {
-  font-family: 'Inter', 'Noto Sans KR', sans-serif;
-  font-weight: 600;
-  font-size: 14px;
-  color: #171717;
-  letter-spacing: -0.5px;
 }
 
 .reportTime {
@@ -346,11 +325,64 @@
   fill: #171717;
 }
 
+/* Floating Action Menu */
+.fabMenuContainer {
+  position: fixed;
+  bottom: 160px;
+  right: 0px;
+  z-index: 98;
+}
+
+.fabMenuBackground {
+  background: #fafafa;
+  border: 1px solid black;
+  border-radius: 80px;
+  box-shadow: 0px 2px 2px 0px black;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+  width: 70px;
+}
+
+.fabMenuItem {
+  width: 56px;
+  height: 56px;
+  background: #fafafa;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0px 1px 6px 0px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.fabMenuItem:hover {
+  transform: scale(1.05);
+}
+
+.fabMenuLabel {
+  position: absolute;
+  bottom: -20px;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #525252;
+  letter-spacing: -0.5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* Floating Action Button */
 .fab {
   position: fixed;
   bottom: 90px;
-  right: 16px;
+  right: 0px;
   width: 56px;
   height: 56px;
   background: #171717;
@@ -362,8 +394,70 @@
   justify-content: center;
   cursor: pointer;
   z-index: 99;
+  transition: transform 0.3s, background 0.2s;
 }
 
 .fab:hover {
   background: #262626;
+}
+
+.fab.fabOpen {
+  background: #00abfa;
+}
+
+.fab.fabOpen:hover {
+  background: #0099e0;
+}
+
+.fabIcon {
+  transition: transform 0.3s;
+}
+
+.fab.fabOpen .fabIcon {
+  transform: rotate(45deg);
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.35);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 120;
+}
+
+.loadingCard {
+  background: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.loadingSpinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid #d4d4d4;
+  border-top-color: #0a7a7e;
+  animation: spin 0.8s linear infinite;
+}
+
+.loadingText {
+  margin: 0;
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #171717;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

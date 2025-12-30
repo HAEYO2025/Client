@@ -62,13 +62,16 @@ export const ScenarioCreate = () => {
       return;
     }
 
-    // TODO: Implement scenario creation API
-    console.log('Creating scenario:', {
-      ...formData,
-      reportId: selectedReport.id,
+    const startDatetime = `${formData.startDate}T${formData.startTime}:00`;
+
+    navigate('/scenario/result', {
+      state: {
+        selectedReport,
+        scenarioTitle: formData.title,
+        scenarioDescription: formData.situation,
+        startDate: startDatetime,
+      },
     });
-    alert('시나리오가 생성되었습니다!');
-    navigate('/home');
   };
 
   const handleSelectReport = (report: Report) => {

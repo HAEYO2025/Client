@@ -5,6 +5,7 @@ import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import type { SignUpFormData } from '../../types/auth';
+import { signUp } from '../../api/auth';
 import styles from './SignUpMobile.module.css';
 
 export const SignUpMobile = () => {
@@ -14,11 +15,25 @@ export const SignUpMobile = () => {
     username: '',
     password: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Sign up data:', formData);
-    // TODO: Implement sign up API call
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await signUp(formData);
+      console.log('Sign up success:', response);
+      navigate('/login');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '회원가입에 실패했습니다.';
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (field: keyof SignUpFormData) => (
@@ -68,9 +83,13 @@ export const SignUpMobile = () => {
             placeholder="비밀번호를 입력하세요"
             required
           />
+
+          {error && <p className={styles.error}>{error}</p>}
           
           <div className={styles.actions}>
-            <Button type="submit">가입</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? '가입 중...' : '가입'}
+            </Button>
             <Button 
               type="button" 
               variant="secondary"

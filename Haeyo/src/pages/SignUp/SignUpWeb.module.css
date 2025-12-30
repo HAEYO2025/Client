@@ -34,6 +34,16 @@
   gap: 69px;
 }
 
+.error {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+  padding: 8px;
+  background: #fee2e2;
+  border-radius: 4px;
+}
+
 /* Web version input styles */
 .form input {
   height: 51px;
