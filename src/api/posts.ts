@@ -1,6 +1,6 @@
 import type { Post, CreatePostRequest, PostCategory } from '../types/post';
 
-const API_BASE_URL = ''; // Base URL is empty to use relative paths if proxy is configured
+const API_BASE_URL = '';
 
 const getHeaders = () => {
   const token = localStorage.getItem('authToken');
