@@ -1,0 +1,51 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  padding: 88px 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 604px;
+  padding: 78px 46px 72px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  box-shadow: 0px 2px 3px 2px #c6c6c6;
+  background: white;
+}
+
+.title {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: #000000;
+  text-align: center;
+  margin: 0 0 98px;
+  line-height: normal;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 69px;
+}
+
+/* Web version input styles */
+.form input {
+  height: 51px;
+  border: 1px solid #5b5b5b;
+  border-radius: 5px;
+}
+
+/* Web version button styles */
+.form button {
+  margin-top: 70px;
+  height: 55px;
+  background: #d3d3d3;
+  border: 1px solid #f5f4f9;
+  border-radius: 5px;
+}

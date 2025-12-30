@@ -1,0 +1,33 @@
+.button {
+  width: 100%;
+  height: 56px;
+  border-radius: 8px;
+  font-family: 'Pretendard Variable', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: #d1d5db;
+  color: #000000;
+}
+
+.secondary {
+  background: transparent;
+  color: #0062ff;
+  font-size: 12px;
+  height: auto;
+  padding: 8px;
+}
