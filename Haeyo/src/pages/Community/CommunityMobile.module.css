@@ -92,65 +92,143 @@
   background: white;
   border-radius: 12px;
   padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.postCard:active {
+  transform: scale(0.98);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .postAvatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: #eee;
+  background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
-.postInfo {
-  flex: 1;
-}
-
-.postTop {
+.headerText {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
+  flex-direction: column;
 }
 
 .postName {
-  font-weight: bold;
   font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
 }
 
 .postTime {
-  color: #999;
   font-size: 12px;
+  color: #888;
+}
+
+.statusBadge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.statusBadge.resolved {
+  background-color: #e6f7ff;
+  color: #1890ff;
+}
+
+.statusBadge.unresolved {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.cardBody {
+  display: flex;
+  gap: 12px;
+}
+
+.textContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
 }
 
 .postText {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 15px;
   color: #333;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.postActions {
-  display: flex;
-  gap: 16px;
-}
-
-.actionBtn {
-  background: none;
-  border: none;
+.metaInfo {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-family: 'Inter', sans-serif;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.categoryBadge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+  background-color: #8c8c8c;
+}
+
+.categoryBadge.DAMAGE { background-color: #ff4d4f; }
+.categoryBadge.ANIMAL { background-color: #faad14; }
+.categoryBadge.TRASH { background-color: #52c41a; }
+.categoryBadge.OTHER { background-color: #8c8c8c; }
+
+.addressText {
   font-size: 12px;
-  color: #737373;
-  letter-spacing: -0.5px;
-  padding: 0;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.thumbnailContainer {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #f0f0f0;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .postCard {
@@ -276,4 +354,69 @@
 
 .modalSubmitBtn:disabled {
   background: #ccc;
+}
+
+/* Community Specific Styles */
+.communityPostCard {
+  display: flex;
+  gap: 12px;
+  background: white;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.communityPostCard:last-child {
+  border-bottom: none;
+}
+
+.postContentWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.communityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.timeAgo {
+  font-size: 12px;
+  color: #999;
+}
+
+.communityBody {
+  margin-bottom: 8px;
+}
+
+.communityActions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #8C8C8C;
+}
+
+.actionItem svg {
+  width: 14px;
+  height: 14px;
+  fill: #8C8C8C;
+}
+
+/* Override avatar for this view if needed */
+.communityPostCard .postAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eee;
+  flex-shrink: 0;
+  overflow: hidden;
 }

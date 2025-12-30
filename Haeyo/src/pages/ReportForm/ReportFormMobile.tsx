@@ -80,10 +80,7 @@ export const ReportFormMobile = () => {
     try {
       setIsSubmitting(true);
       
-      let base64Image = '';
-      if (images.length > 0) {
-        base64Image = await fileToBase64(images[0]);
-      }
+      const base64Images = await Promise.all(images.map(fileToBase64));
 
       const categoryMap: Record<string, PostCategory> = {
         '위험': 'DAMAGE',
@@ -97,7 +94,8 @@ export const ReportFormMobile = () => {
         longitude: coordinates.lng,
         category: (categoryMap[category] || 'OTHER') as PostCategory,
         description: `${title}\n\n${content}`,
-        imageBase64: base64Image,
+        imageBase64: base64Images[0], // Fallback
+        imageBase64s: base64Images, // Multiple images
         address: `${location} ${locationDetail}`.trim()
       });
 

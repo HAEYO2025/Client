@@ -15,11 +15,7 @@ declare global {
   }
 }
 
-interface MapMarker {
-  id: number;
-  lat: number;
-  lng: number;
-}
+
 
 export const HomeWeb = () => {
   const navigate = useNavigate();
@@ -40,19 +36,28 @@ export const HomeWeb = () => {
 
   const filterOptions = ['전체', '위험', '생물', '쓰레기'];
 
-  const mapMarkers: MapMarker[] = useMemo(() => {
-    return posts.map((post: Post) => ({
-      id: post.id,
-      lat: post.latitude,
-      lng: post.longitude
-    }));
-  }, [posts]);
+
+
+  const filterMap: { [key: string]: string } = {
+    '전체': 'ALL',
+    '위험': 'DAMAGE',
+    '생물': 'ANIMAL',
+    '쓰레기': 'TRASH'
+  };
+
+  // Separate memo for filtered posts to use in the list
+  const filteredPosts = useMemo(() => {
+    const backendCategory = filterMap[selectedFilter];
+    return selectedFilter === '전체' 
+      ? posts 
+      : posts.filter(post => post.category === backendCategory);
+  }, [posts, selectedFilter]);
 
   const handlePostClick = useCallback((postId: number) => {
     navigate(`/report/${postId}`);
   }, [navigate]);
 
-  // Kakao Map Initialization
+  // Kakao Map Initialization & Clustering
   useEffect(() => {
     if (!isMapLoaded || !window.kakao || !mapContainer.current) return;
 
@@ -62,29 +67,56 @@ export const HomeWeb = () => {
         level: 7
       };
 
-      const map = new window.kakao.maps.Map(mapContainer.current, options);
-      mapInstance.current = map;
+      // Only initialize map if it doesn't exist
+      if (!mapInstance.current) {
+        mapInstance.current = new window.kakao.maps.Map(mapContainer.current, { ...options, draggable: true });
+        mapInstance.current.setDraggable(true);
+      }
+      
+      const map = mapInstance.current;
 
-      mapMarkers.forEach(markerPos => {
-        const position = new window.kakao.maps.LatLng(markerPos.lat, markerPos.lng);
+      // Initialize Clusterer
+      const clusterer = new window.kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 5,
+        disableClickZoom: true // 클러스터 클릭 시 줌 동작 제어
+      });
 
-        const content = document.createElement('div');
-        content.className = styles.mapMarker;
-        content.innerText = markerPos.id.toString();
-        content.onclick = () => handlePostClick(markerPos.id);
+      // Clear existing overlays/markers (If we were tracking them. Clusterer handles its own)
+      clusterer.clear();
+
+      // Create Markers for Clusterer
+      const markers = filteredPosts.map(post => {
+        const position = new window.kakao.maps.LatLng(post.latitude, post.longitude);
+        const marker = new window.kakao.maps.Marker({
+          position: position
+        });
         
-        const customOverlay = new window.kakao.maps.CustomOverlay({
-          position: position,
-          content: content,
-          yAnchor: 0.5
+        // Add click event to marker
+        window.kakao.maps.event.addListener(marker, 'click', () => handlePostClick(post.id));
+        
+        return marker;
+      });
+
+      // Add markers to clusterer
+      clusterer.addMarkers(markers);
+      
+      // Cluster click event
+        window.kakao.maps.event.addListener(clusterer, 'clusterclick', function(cluster: any) {
+            const level = map.getLevel() - 1;
+            map.setLevel(level, {anchor: cluster.getCenter()});
         });
 
-        customOverlay.setMap(map);
-      });
+      // Cleanup function to clear markers when dependencies change
+      return () => {
+        clusterer.clear();
+      };
+
     } catch (error) {
       console.error('지도 초기화 오류:', error);
     }
-  }, [isMapLoaded, handlePostClick, mapMarkers]);
+  }, [isMapLoaded, filteredPosts, handlePostClick]);
 
   const handleZoom = (delta: number) => {
     if (!mapInstance.current) return;
@@ -198,50 +230,78 @@ export const HomeWeb = () => {
           <div className={styles.commentsList}>
             {isLoading ? (
               <div style={{ padding: '20px', textAlign: 'center' }}>제보를 불러오는 중...</div>
-            ) : posts.length === 0 ? (
+            ) : filteredPosts.length === 0 ? (
                <div style={{ padding: '20px', textAlign: 'center' }}>최근 제보가 없습니다.</div>
             ) : (
-              posts.map((post: Post) => (
-                <div 
-                  key={post.id} 
-                  className={styles.commentItem}
-                  onClick={() => handlePostClick(post.id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className={styles.commentAvatar}>
-                    👤
-                  </div>
-                  <div className={styles.commentContent}>
-                    <div className={styles.commentHeader}>
-                      <span className={styles.commentName}>{post.username}</span>
-                      <span className={styles.commentTime}>{new Date(post.createdAt).toLocaleDateString()}</span>
+              filteredPosts.map((post: Post) => {
+                const categoryMap: { [key: string]: string } = {
+                  'DAMAGE': '위험',
+                  'ANIMAL': '생물',
+                  'TRASH': '쓰레기',
+                  'OTHER': '기타'
+                };
+                const categoryKorean = categoryMap[post.category] || post.category;
+                const imageUrl = post.imageUrl 
+                  ? (post.imageUrl.startsWith('http') || post.imageUrl.startsWith('/uploads') 
+                      ? post.imageUrl 
+                      : `/uploads/${post.imageUrl}`)
+                  : null;
+                
+                // Extract title
+                const title = post.description.split('\n')[0];
+
+                return (
+                  <div 
+                    key={post.id} 
+                    className={styles.commentItem}
+                    onClick={() => handlePostClick(post.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className={styles.cardHeader}>
+                      <div className={styles.userInfo}>
+                        <div className={styles.commentAvatar}>👤</div>
+                        <div className={styles.headerText}>
+                          <span className={styles.commentName}>{post.username}</span>
+                          <span className={styles.commentTime}>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                         <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '12px', color: '#888' }}>
+                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M14 9V5C14 3.34 12.66 2 11 2C10.45 2 10 2.45 10 3V9H4C2.9 9 2 9.9 2 11V20C2 21.1 2.9 22 4 22H14C15.52 22 17.5 21.55 18.25 19.74L21.38 12.44C21.45 12.28 21.49 12.11 21.49 11.94C21.49 11.42 21.07 11 20.55 11H14V9ZM4 20V11H12V5.41C12 5.06 12.15 4.79 12.35 4.59L12.7 4.94L7 10.64V20H4Z" fill="#8C8C8C"/>
+                           </svg>
+                           <span>{post.likes || 12}</span>
+                         </div>
+                         <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '12px', color: '#888' }}>
+                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M10 15V19C10 20.66 11.34 22 13 22C13.55 22 14 21.55 14 21V15H20C21.1 15 22 14.1 22 13V4C22 2.9 21.1 2 20 2H10C8.48 2 6.5 2.45 5.75 4.26L2.62 11.56C2.55 11.72 2.51 11.89 2.51 12.06C2.51 12.58 2.93 13 3.45 13H10V15ZM20 4V13H12V18.59C12 18.94 11.85 19.21 11.65 19.41L11.3 19.06L17 13.36V4H20Z" fill="#8C8C8C"/>
+                           </svg>
+                           <span>{post.dislikes || 12}</span>
+                         </div>
+                      </div>
                     </div>
-                    <p className={styles.commentText}>{post.description}</p>
-                    <div className={styles.commentFooter}>
-                      <span className={styles.commentStat}>
-                        {post.category}
-                      </span>
-                      <span className={styles.commentStat}>
-                        {post.resolved ? '해결됨' : '미해결'}
-                      </span>
+
+                    <div className={styles.cardBody}>
+                      <div className={styles.textContent}>
+                        <p className={styles.commentText}>{title}</p>
+                        <div className={styles.metaInfo}>
+                          <span className={`${styles.categoryBadge} ${styles[post.category]}`}>
+                            {categoryKorean}
+                          </span>
+                          {post.address && <span className={styles.addressText}>{post.address}</span>}
+                        </div>
+                      </div>
+                      {imageUrl && (
+                        <div className={styles.thumbnailContainer}>
+                          <img src={imageUrl} alt="제보 이미지" className={styles.thumbnail} />
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
-
-          {/* 안전 안내 컴포넌트 비활성화 */}
-          {/* 
-          <div className={styles.announcementBox}>
-            <div className={styles.announcementIcon}>📢</div>
-            <div className={styles.announcementContent}>
-              <strong>안전 안내</strong>
-              <p>현재 실종과 제보를 분석한 결과,<br />A 항로로 유하하는 것이 더 안전합니다.</p>
-              <button className={styles.detailBtn}>자세히 보기</button>
-            </div>
-          </div>
-          */}
         </aside>
 
         {/* Map Area */}

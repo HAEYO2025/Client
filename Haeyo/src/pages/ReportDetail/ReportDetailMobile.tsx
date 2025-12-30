@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Header } from '../../components/Header';
+
 import type { Post } from '../../types/post';
 import { getPostById, toggleResolvePost, deletePost, checkAuth } from '../../api/posts';
 import styles from './ReportDetailMobile.module.css';
@@ -66,10 +66,14 @@ export const ReportDetailMobile = () => {
     }
   };
 
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <Header />
         <div className={styles.loading}>로딩 중...</div>
       </div>
     );
@@ -78,7 +82,6 @@ export const ReportDetailMobile = () => {
   if (!post) {
     return (
       <div className={styles.container}>
-        <Header />
         <div className={styles.error}>제보를 찾을 수 없습니다.</div>
       </div>
     );
@@ -88,96 +91,72 @@ export const ReportDetailMobile = () => {
 
   return (
     <div className={styles.container}>
-      <Header />
-      
-      <main className={styles.main}>
-        {/* Title Section */}
-        <section className={styles.titleSection}>
-          <div className={styles.categoryBadge}>{post.category}</div>
-          <h1 className={styles.title}>{post.category} 제보</h1>
-          <div className={styles.meta}>
-            <span className={styles.date}>{date}</span>
-            <span className={styles.time}>{time}</span>
-          </div>
-        </section>
-
-        {/* Image Section */}
-        {post.imageUrl && (
-          <section className={styles.imagesSection}>
-            <div className={styles.imageScroll}>
-                <div className={styles.imageWrapper}>
-                  <img src={post.imageUrl} alt="Report" className={styles.image} />
-                </div>
-            </div>
-          </section>
-        )}
-
-        {/* Info Grid */}
-        <section className={styles.infoSection}>
-          <div className={styles.infoItem}>
-            <div className={styles.infoIcon}>📍</div>
-            <div className={styles.infoContent}>
-              <div className={styles.infoLabel}>위치</div>
-              <div className={styles.infoValue}>{post.address}</div>
-              <div className={styles.infoDetail}>상세 정보 없음</div>
-            </div>
-          </div>
-        </section>
-
-        {/* Content Section */}
-        <section className={styles.contentSection}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 className={styles.subTitle}>상세 내용</h2>
-            {currentUser.authenticated && currentUser.username === post.username && (
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button 
-                  style={{ padding: '4px 8px', fontSize: '12px', borderRadius: '4px', border: '1px solid #ddd', background: '#fff' }}
-                  onClick={handleToggleResolve}
-                  disabled={isActionLoading}
-                >
-                  {post.resolved ? '취소' : '해결'}
-                </button>
-                <button 
-                  style={{ padding: '4px 8px', fontSize: '12px', borderRadius: '4px', border: 'none', background: '#ff4d4f', color: '#fff' }}
-                  onClick={handleDelete}
-                  disabled={isActionLoading}
-                >
-                  삭제
-                </button>
-              </div>
-            )}
-          </div>
-          <div className={styles.contentText}>{post.description}</div>
-        </section>
-
-        {/* Author Section */}
-        <section className={styles.authorSection}>
-          <div className={styles.authorBox}>
-            <div className={styles.avatar}>👤</div>
-            <div className={styles.authorDetails}>
-              <div className={styles.authorName}>{post.username}</div>
-              <div className={styles.authorLabel}>제보자 | {post.resolved ? '해결됨' : '미해결'}</div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Action Tabs/Footer */}
-      <footer className={styles.footer}>
-        <button className={styles.mainAction} onClick={() => navigate('/reportform')}>
-          제보하기
+      <header className={styles.header}>
+        <button className={styles.backButton} onClick={handleBack}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </button>
-        <div className={styles.tabBar}>
-          <button className={styles.tabItem} onClick={() => navigate('/scenario/create')}>
-            <span className={styles.tabIcon}>🌟</span>
-            <span className={styles.tabLabel}>시나리오</span>
-          </button>
-          <button className={styles.tabItem}>
-            <span className={styles.tabIcon}>🛡️</span>
-            <span className={styles.tabLabel}>안전가이드</span>
-          </button>
+        <h1 className={styles.headerTitle}>제보 상세</h1>
+        <div className={styles.headerSpacer}></div>
+      </header>
+
+      <main className={styles.main}>
+        {/* Scrollable Content */}
+        <div className={styles.content}>
+          {post.imageUrl && (
+            <div className={styles.imageSection}>
+              <img src={post.imageUrl} alt="제보 이미지" className={styles.image} />
+            </div>
+          )}
+
+          <div className={styles.section}>
+            <div className={styles.categoryBadge}>{post.category}</div>
+            <h2 className={styles.sectionTitle}>제보 내용</h2>
+            <p className={styles.description}>{post.description}</p>
+          </div>
+
+          <div className={styles.section}>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>위치</span>
+              <span className={styles.value}>{post.address}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>일시</span>
+              <span className={styles.value}>{date} {time}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>작성자</span>
+              <span className={styles.value}>{post.username}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>상태</span>
+              <span className={styles.value} style={{ color: post.resolved ? '#4caf50' : '#ff9800' }}>
+                {post.resolved ? '해결됨' : '미해결'}
+              </span>
+            </div>
+          </div>
+
+          {currentUser.authenticated && currentUser.username === post.username && (
+            <div className={styles.actionSection}>
+              <button 
+                className={styles.actionButton}
+                onClick={handleToggleResolve}
+                disabled={isActionLoading}
+              >
+                {post.resolved ? '미해결로 변경' : '해결 완료'}
+              </button>
+              <button 
+                className={`${styles.actionButton} ${styles.deleteButton}`}
+                onClick={handleDelete}
+                disabled={isActionLoading}
+              >
+                삭제
+              </button>
+            </div>
+          )}
         </div>
-      </footer>
+      </main>
     </div>
   );
 };

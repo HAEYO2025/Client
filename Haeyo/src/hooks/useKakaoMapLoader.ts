@@ -25,7 +25,7 @@ export const useKakaoMapLoader = () => {
 
     // 새 스크립트 생성
     const script = document.createElement('script');
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&libraries=services&autoload=false`;
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&libraries=services,clusterer&autoload=false`;
     script.async = true;
 
     script.onload = () => {

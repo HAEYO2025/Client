@@ -8,9 +8,12 @@ export interface Post {
   category: PostCategory;
   description: string;
   imageUrl: string;
+  imageUrls?: string[];
   address: string;
   createdAt: string;
   resolved: boolean;
+  likes: number;
+  dislikes: number;
 }
 
 export interface CreatePostRequest {
@@ -18,7 +21,8 @@ export interface CreatePostRequest {
   longitude: number;
   category: PostCategory;
   description: string;
-  imageBase64: string;
+  imageBase64?: string;
+  imageBase64s?: string[];
   address: string;
 }
 
