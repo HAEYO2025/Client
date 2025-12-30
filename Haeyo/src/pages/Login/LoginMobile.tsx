@@ -80,19 +80,19 @@ export const LoginMobile = () => {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? '로그인 중...' : '로그인'}
             </Button>
-          </form>
-          
-          <div className={styles['link-container']}>
-            <Button 
-              className={styles['link-btn']}
-              variant="secondary"
-              onClick={handleSignUpClick}
-            >
-              회원가입하기
-            </Button>
           </div>
+        </form>
+        
+        <div className={styles['link-container']}>
+          <Button 
+            className={styles['link-btn']}
+            variant="secondary"
+            onClick={handleSignUpClick}
+          >
+            회원가입하기
+          </Button>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

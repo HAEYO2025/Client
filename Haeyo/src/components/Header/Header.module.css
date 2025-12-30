@@ -38,17 +38,7 @@
   transform: translateX(-50%);
 }
 
-<<<<<<< HEAD
-.icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-}
-
-.text {
-=======
 .logoText {
->>>>>>> master
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-weight: 700;
   font-size: 18px;

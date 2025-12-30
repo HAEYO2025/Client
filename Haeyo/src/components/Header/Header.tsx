@@ -59,10 +59,6 @@ export const Header = ({
         )}
       </button>
       <div className={styles.logo}>
-<<<<<<< HEAD
-        <img src="/logo.png" alt="Haeyo Logo" className={styles.icon} />
-        <span className={styles.text}>해요</span>
-=======
         {logoIconSrc ? (
           <img src={logoIconSrc} alt="Logo" className={styles.logoIcon} />
         ) : (
@@ -71,7 +67,6 @@ export const Header = ({
           </svg>
         )}
         <span className={styles.logoText}>해요</span>
->>>>>>> master
       </div>
       <button className={styles.notificationBtn} onClick={onNotificationClick}>
         {notificationIconSrc ? (
