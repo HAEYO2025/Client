@@ -4,6 +4,7 @@ import { fetchProfileData } from '../../api/profile';
 import type { ProfileData } from '../../types/profile';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { FloatingActionButton } from '../../components/FloatingActionButton';
+import { Header } from '../../components/Header';
 import styles from './ProfileMobile.module.css';
 
 export const ProfileMobile = () => {
@@ -50,14 +51,7 @@ export const ProfileMobile = () => {
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>
-            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
-              <path d="M15 9H1M1 9L8 16M1 9L8 2" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <h1 className={styles.title}>프로필</h1>
-        </header>
+        <Header variant="page" title="프로필" />
         <div className={styles.loadingState}>
           <p>프로필을 불러오는 중...</p>
         </div>
@@ -68,14 +62,7 @@ export const ProfileMobile = () => {
   if (!profileData) {
     return (
       <div className={styles.container}>
-        <header className={styles.header}>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>
-            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
-              <path d="M15 9H1M1 9L8 16M1 9L8 2" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <h1 className={styles.title}>프로필</h1>
-        </header>
+        <Header variant="page" title="프로필" />
         <div className={styles.errorState}>
           <p>프로필을 불러올 수 없습니다.</p>
         </div>
@@ -88,14 +75,7 @@ export const ProfileMobile = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <header className={styles.header}>
-        <button className={styles.backBtn} onClick={() => navigate(-1)}>
-          <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
-            <path d="M15 9H1M1 9L8 16M1 9L8 2" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-        <h1 className={styles.title}>프로필</h1>
-      </header>
+      <Header variant="page" title="프로필" />
 
       {/* Scrollable Content */}
       <div className={styles.scrollContent}>
