@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { Report } from '../../types/report';
+import { fetchAvailableReportsForScenario } from '../../api/reports';
+import { ReportSelectModal } from '../../components/ReportSelectModal';
 import styles from './ScenarioCreate.module.css';
 
 export const ScenarioCreate = () => {
@@ -10,10 +13,31 @@ export const ScenarioCreate = () => {
     startDate: '2025-01-15',
     startTime: '14:30',
   });
-  const [selectedReport] = useState({
-    content: '해파리 발견했습니다.',
-    author: '김동욱',
-  });
+  
+  const [availableReports, setAvailableReports] = useState<Report[]>([]);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [isLoadingReports, setIsLoadingReports] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const loadReports = async () => {
+      try {
+        setIsLoadingReports(true);
+        const response = await fetchAvailableReportsForScenario();
+        if (response.success && response.data.length > 0) {
+          setAvailableReports(response.data);
+          // Default to first report
+          setSelectedReport(response.data[0]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch reports:', error);
+      } finally {
+        setIsLoadingReports(false);
+      }
+    };
+
+    loadReports();
+  }, []);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -23,10 +47,32 @@ export const ScenarioCreate = () => {
   };
 
   const handleSubmit = () => {
-    // TODO: Implement scenario creation
-    console.log('Creating scenario:', formData);
+    if (!selectedReport) {
+      alert('제보를 선택해주세요.');
+      return;
+    }
+
+    if (!formData.title.trim()) {
+      alert('시나리오 제목을 입력해주세요.');
+      return;
+    }
+
+    if (formData.situation.length < 10) {
+      alert('시나리오 상황을 최소 10자 이상 입력해주세요.');
+      return;
+    }
+
+    // TODO: Implement scenario creation API
+    console.log('Creating scenario:', {
+      ...formData,
+      reportId: selectedReport.id,
+    });
     alert('시나리오가 생성되었습니다!');
     navigate('/home');
+  };
+
+  const handleSelectReport = (report: Report) => {
+    setSelectedReport(report);
   };
 
   const characterCount = formData.situation.length;
@@ -61,19 +107,35 @@ export const ScenarioCreate = () => {
           {/* Selected Report */}
           <div className={styles.formGroup}>
             <label className={styles.label}>제보 불러오기 *</label>
-            <div className={styles.reportCard}>
-              <div className={styles.reportIcon}>
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                  <circle cx="16" cy="16" r="16" fill="#FF4444"/>
-                  <path d="M16 8V18M16 22V24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+            {isLoadingReports ? (
+              <div className={styles.reportCardLoading}>
+                <p>제보를 불러오는 중...</p>
               </div>
-              <div className={styles.reportInfo}>
-                <p className={styles.reportContent}>{selectedReport.content}</p>
-                <p className={styles.reportAuthor}>{selectedReport.author}</p>
+            ) : selectedReport ? (
+              <div className={styles.reportCard}>
+                <div className={styles.reportIcon}>
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="16" fill="#FF4444"/>
+                    <path d="M16 8V18M16 22V24" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <div className={styles.reportInfo}>
+                  <p className={styles.reportContent}>{selectedReport.content}</p>
+                  <p className={styles.reportAuthor}>{selectedReport.author.name}</p>
+                </div>
+                <button 
+                  className={styles.changeBtn}
+                  onClick={() => setIsModalOpen(true)}
+                  type="button"
+                >
+                  변경
+                </button>
               </div>
-              <button className={styles.changeBtn}>변경</button>
-            </div>
+            ) : (
+              <div className={styles.reportCardEmpty}>
+                <p>선택 가능한 제보가 없습니다.</p>
+              </div>
+            )}
           </div>
 
           {/* Situation Field */}
@@ -85,6 +147,7 @@ export const ScenarioCreate = () => {
               value={formData.situation}
               onChange={(e) => handleChange('situation', e.target.value)}
               rows={6}
+              maxLength={500}
             />
             <div className={styles.textareaFooter}>
               <span className={styles.hint}>최소 10자 이상 입력해주세요</span>
@@ -134,6 +197,17 @@ export const ScenarioCreate = () => {
           시나리오에서 생존하기
         </button>
       </div>
+
+      {/* Report Selection Modal */}
+      {isModalOpen && (
+        <ReportSelectModal
+          reports={availableReports}
+          selectedReportId={selectedReport?.id || null}
+          onSelect={handleSelectReport}
+          onClose={() => setIsModalOpen(false)}
+          isLoading={isLoadingReports}
+        />
+      )}
     </div>
   );
 };

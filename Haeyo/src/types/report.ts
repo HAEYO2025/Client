@@ -10,6 +10,10 @@ export interface Report {
     likes: number;
     comments: number;
   };
+  location: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export interface ReportsResponse {

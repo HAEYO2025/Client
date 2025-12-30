@@ -17,6 +17,10 @@ const MOCK_REPORTS: Report[] = [
       likes: 12,
       comments: 12,
     },
+    location: {
+      latitude: 37.5665,
+      longitude: 126.978,
+    },
   },
   {
     id: '2',
@@ -29,6 +33,10 @@ const MOCK_REPORTS: Report[] = [
     stats: {
       likes: 8,
       comments: 12,
+    },
+    location: {
+      latitude: 37.4562,
+      longitude: 126.7052,
     },
   },
   {
@@ -43,6 +51,10 @@ const MOCK_REPORTS: Report[] = [
       likes: 2,
       comments: 12,
     },
+    location: {
+      latitude: 37.3905,
+      longitude: 126.6356,
+    },
   },
   {
     id: '4',
@@ -55,6 +67,10 @@ const MOCK_REPORTS: Report[] = [
     stats: {
       likes: 8,
       comments: 12,
+    },
+    location: {
+      latitude: 37.4481,
+      longitude: 126.3820,
     },
   },
 ];
@@ -100,5 +116,28 @@ export const fetchReportsByPage = async (page: number, limit: number = 10): Prom
   return {
     success: true,
     data: paginatedReports,
+  };
+};
+
+/**
+ * Fetch available reports for scenario creation
+ * Returns reports that can be used as basis for scenarios
+ * 
+ * Mock implementation - replace with actual API call later:
+ * 
+ * export const fetchAvailableReportsForScenario = async (): Promise<ReportsResponse> => {
+ *   const response = await fetch('/api/reports/available-for-scenario');
+ *   const data = await response.json();
+ *   return data;
+ * };
+ */
+export const fetchAvailableReportsForScenario = async (): Promise<ReportsResponse> => {
+  await mockDelay(300);
+
+  // Mock: Return all reports as available for scenarios
+  // In real implementation, this might filter by certain criteria
+  return {
+    success: true,
+    data: MOCK_REPORTS,
   };
 };
