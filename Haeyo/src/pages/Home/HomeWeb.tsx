@@ -75,7 +75,6 @@ export const HomeWeb = () => {
       
       const map = mapInstance.current;
 
-      // Initialize Clusterer
       const clusterer = new window.kakao.maps.MarkerClusterer({
         map: map,
         averageCenter: true,
@@ -83,7 +82,6 @@ export const HomeWeb = () => {
         disableClickZoom: true // 클러스터 클릭 시 줌 동작 제어
       });
 
-      // Clear existing overlays/markers (If we were tracking them. Clusterer handles its own)
       clusterer.clear();
 
       // Create Markers for Clusterer
