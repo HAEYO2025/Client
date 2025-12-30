@@ -7,6 +7,9 @@ import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { FloatingActionButton } from '../../components/FloatingActionButton';
 import { Header } from '../../components/Header';
+import menuIcon from '../../assets/menu-icon.svg';
+import logoIcon from '../../assets/logo-icon.svg';
+import notificationIcon from '../../assets/notification-icon.svg';
 import styles from './HomeMobile.module.css';
 
 export const HomeMobile = () => {
@@ -74,7 +77,12 @@ export const HomeMobile = () => {
   return (
     <div className={styles.container}>
       {/* Header */}
-      <Header variant="main" />
+      <Header
+        variant="main"
+        menuIconSrc={menuIcon}
+        logoIconSrc={logoIcon}
+        notificationIconSrc={notificationIcon}
+      />
 
       {/* Scrollable Content */}
       <div className={styles.scrollContent}>
@@ -160,12 +168,8 @@ export const HomeMobile = () => {
             <div className={styles.reportsList}>
               {reports.map((report) => (
                 <div key={report.id} className={styles.reportCard}>
-                  <div className={styles.reportAvatar}>
-                    {report.author.avatar || '👤'}
-                  </div>
                   <div className={styles.reportContent}>
                     <div className={styles.reportHeader}>
-                      <span className={styles.reportName}>{report.author.name}</span>
                       <span className={styles.reportTime}>{report.timeAgo}</span>
                     </div>
                     <p className={styles.reportText}>{report.content}</p>

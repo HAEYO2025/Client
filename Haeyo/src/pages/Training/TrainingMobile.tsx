@@ -4,6 +4,7 @@ import { fetchSafetyGuide } from '../../api/safetyGuide';
 import type { SafetyGuideRequest } from '../../types/safetyGuide';
 import { BottomNavigation } from '../../components/BottomNavigation';
 import { FloatingActionButton } from '../../components/FloatingActionButton';
+import { Header } from '../../components/Header';
 import menuIcon from '../../assets/menu-icon.svg';
 import logoIcon from '../../assets/logo-icon.svg';
 import notificationIcon from '../../assets/notification-icon.svg';
@@ -60,19 +61,12 @@ export const TrainingMobile = () => {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
-      <header className={styles.header}>
-        <button className={styles.menuBtn} onClick={() => navigate('/home')}>
-          <img src={menuIcon} alt="Menu" />
-        </button>
-        <div className={styles.logo}>
-          <img src={logoIcon} alt="Logo" className={styles.logoIcon} />
-          <span className={styles.logoText}>해요</span>
-        </div>
-        <button className={styles.notificationBtn}>
-          <img src={notificationIcon} alt="Notifications" />
-        </button>
-      </header>
+      <Header
+        onMenuClick={() => navigate('/home')}
+        menuIconSrc={menuIcon}
+        logoIconSrc={logoIcon}
+        notificationIconSrc={notificationIcon}
+      />
 
       {/* Scrollable Content */}
       <div className={styles.scrollContent}>

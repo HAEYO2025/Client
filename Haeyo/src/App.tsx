@@ -6,7 +6,7 @@ import { TrainingMobile, TrainingWeb } from './pages/Training'
 import { ScenarioCreate } from './pages/ScenarioCreate'
 import { ScenarioResult } from './pages/ScenarioResult'
 import { ScenarioFeedback } from './pages/ScenarioFeedback'
-import { SafetyGuide } from './pages/SafetyGuide'
+import { SafetyGuideMobile, SafetyGuideWeb } from './pages/SafetyGuide'
 import { ProfileMobile } from './pages/Profile/ProfileMobile'
 import { useMediaQuery } from './hooks/useMediaQuery'
 import { isAuthenticated } from './api/auth'
@@ -30,6 +30,11 @@ function HomePage() {
 function TrainingPage() {
   const isMobile = useMediaQuery('(max-width: 767px)')
   return isMobile ? <TrainingMobile /> : <TrainingWeb />
+}
+
+function SafetyGuidePage() {
+  const isMobile = useMediaQuery('(max-width: 767px)')
+  return isMobile ? <SafetyGuideMobile /> : <SafetyGuideWeb />
 }
 
 // Protected route component
@@ -87,7 +92,7 @@ function App() {
           path="/safety-guide" 
           element={
             <PrivateRoute>
-              <SafetyGuide />
+              <SafetyGuidePage />
             </PrivateRoute>
           } 
         />

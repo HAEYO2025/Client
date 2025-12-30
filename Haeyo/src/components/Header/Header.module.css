@@ -46,6 +46,21 @@
   letter-spacing: -0.5px;
 }
 
+.menuIcon {
+  width: 18px;
+  height: 20px;
+}
+
+.logoIcon {
+  width: 20px;
+  height: 18px;
+}
+
+.notificationIcon {
+  width: 16px;
+  height: 18px;
+}
+
 .title {
   font-family: 'Inter', 'Noto Sans KR', sans-serif;
   font-weight: 700;

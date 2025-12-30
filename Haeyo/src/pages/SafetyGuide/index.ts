@@ -1,1 +1,2 @@
-export { SafetyGuide } from './SafetyGuide';
+export { SafetyGuide as SafetyGuideMobile } from './SafetyGuide';
+export { SafetyGuideWeb } from './SafetyGuideWeb';
