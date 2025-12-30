@@ -5,6 +5,7 @@ import { Header } from '../../components/Header';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import type { LoginFormData } from '../../types/auth';
+import { login } from '../../api/auth';
 import styles from './LoginMobile.module.css';
 
 export const LoginMobile = () => {
@@ -13,11 +14,26 @@ export const LoginMobile = () => {
     username: '',
     password: '',
   });
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Login data:', formData);
-    // TODO: Implement login API call
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await login(formData);
+      console.log('Login success:', response);
+      alert(`로그인 성공!\n사용자: ${response.userId}`);
+      // TODO: Navigate to home or dashboard
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '로그인에 실패했습니다.';
+      setError(errorMessage);
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (field: keyof LoginFormData) => (
@@ -59,8 +75,12 @@ export const LoginMobile = () => {
             required
           />
           
+          {error && <p className={styles.error}>{error}</p>}
+          
           <div className={styles.actions}>
-            <Button type="submit">로그인</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? '로그인 중...' : '로그인'}
+            </Button>
             <Button 
               type="button" 
               variant="secondary"

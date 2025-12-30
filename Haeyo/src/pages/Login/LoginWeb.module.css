@@ -74,3 +74,13 @@
 .link:hover {
   text-decoration: underline;
 }
+
+.error {
+  color: #dc2626;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+  padding: 8px;
+  background: #fee2e2;
+  border-radius: 4px;
+}
